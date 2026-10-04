@@ -1,3 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-foreground: var(--color-text-primary);
+  --color-background: var(--color-bg-canvas);
+  --spacing-15: 3.75rem;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -721,4 +729,160 @@ section {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* Landing Page Styles */
+.landing-wrapper {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 2rem;
+  position: relative;
+  overflow-x: hidden;
+  background-color: var(--color-bg-canvas);
+}
+
+.landing-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-accent-subtle) 0%, transparent 70%);
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.85;
+  filter: blur(100px);
+  z-index: 0;
+}
+
+/* Skipper Canvas Background */
+.skipper-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+[data-theme="dark"] .skipper-canvas {
+  filter: invert(0.92) brightness(1.2);
+  opacity: 0.75;
+}
+
+[data-theme="light"] .skipper-canvas {
+  filter: none;
+  opacity: 0.85;
+}
+
+.landing-header {
+  width: 100%;
+  max-width: var(--max-w);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  padding-bottom: 1rem;
+}
+
+.landing-buttons-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  width: 100%;
+  margin-top: clamp(2.5rem, 6vh, 4.5rem);
+  margin-bottom: auto;
+  padding: 1rem;
+}
+
+.landing-buttons-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.landing-track-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 16px 32px;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all var(--dur) var(--ease);
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+}
+
+.landing-track-btn-primary {
+  background-color: var(--color-accent-solid);
+  color: var(--color-accent-solid-text);
+  border: 1px solid transparent;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.landing-track-btn-primary:hover {
+  background-color: var(--color-accent-solid-hover);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.32);
+}
+
+.landing-track-btn-secondary {
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.landing-track-btn-secondary:hover {
+  background-color: var(--color-bg-surface-alt);
+  border-color: var(--color-border-strong);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+}
+
+.track-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-btn-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--color-accent-subtle);
+  color: var(--color-accent-text);
+  border: 1px solid var(--color-accent-border);
+}
+
+.track-btn-arrow {
+  font-size: 1.125rem;
+  transition: transform var(--dur) ease;
+}
+
+.landing-track-btn-primary:hover .track-btn-arrow {
+  transform: translateX(4px);
+}
+
+.landing-footer {
+  z-index: 10;
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  padding-top: 1rem;
 }

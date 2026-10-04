@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function Navbar({ theme, onToggleTheme }) {
+export default function Navbar({ theme, onToggleTheme, onBackToHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = [
@@ -18,7 +18,17 @@ export default function Navbar({ theme, onToggleTheme }) {
   return (
     <nav className="nav" role="navigation" aria-label="Main navigation">
       <div className="wrap">
-        <a className="nav-brand" href="#top" aria-label="Portfolio Assignment Home">
+        <a
+          className="nav-brand"
+          href="#top"
+          onClick={(e) => {
+            if (onBackToHome) {
+              e.preventDefault();
+              onBackToHome();
+            }
+          }}
+          aria-label="Portfolio Assignment Home or Back to Tracks"
+        >
           <span className="brand-mark" aria-hidden="true">P</span>
           <span>Student Name / Logo</span>
         </a>
@@ -36,6 +46,22 @@ export default function Navbar({ theme, onToggleTheme }) {
         </div>
 
         <div className="nav-actions">
+          {onBackToHome && (
+            <button
+              className="btn-icon"
+              onClick={onBackToHome}
+              type="button"
+              aria-label="Back to Tracks Landing Page"
+              style={{ borderColor: 'var(--color-accent-border)', color: 'var(--color-accent-text)' }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Tracks</span>
+            </button>
+          )}
+
           {/* Dark Mode / Light Mode toggle */}
           <button
             className="btn-icon"

@@ -1,6 +1,8 @@
 import React from 'react';
+import { ProgressiveBlur } from './ui/skiper-ui/skiper41';
+import { Skiper26 } from './ui/skiper-ui/skiper26';
 
-export default function StructureSection() {
+export default function StructureSection({ theme, onToggleTheme }) {
   const sections = [
     {
       num: '1',
@@ -96,11 +98,22 @@ export default function StructureSection() {
   ];
 
   return (
-    <section id="structure">
-      <div className="wrap">
-        <div className="section-header">
-          <h2>Required Website Structure</h2>
-          <p>Required structure (in this order). The portfolio must be a single-page website.</p>
+    <section id="structure" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Progressive Blur Overlays */}
+      <ProgressiveBlur position="top" height="70px" blurAmount="8px" />
+      <ProgressiveBlur position="bottom" height="70px" blurAmount="8px" />
+
+      <div className="wrap" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
+          <div>
+            <div className="pill" style={{ marginBottom: '0.75rem' }}>
+              <span>Section Overview · Progressive Blur Active</span>
+            </div>
+            <h2>Required Website Structure</h2>
+            <p>Required structure (in this order). The portfolio must be a single-page website.</p>
+          </div>
+
+          <Skiper26 theme={theme} onToggleTheme={onToggleTheme} />
         </div>
 
         <div className="structure-grid">
