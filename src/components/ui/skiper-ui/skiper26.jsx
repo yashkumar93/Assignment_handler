@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { GripHorizontal } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -481,7 +480,14 @@ export const Options = ({
     >
       <div className="flex items-center justify-between pb-1 border-b border-[var(--color-border-subtle)]">
         <span className="size-4 cursor-grab active:cursor-grabbing inline-flex items-center text-[var(--color-text-tertiary)]">
-          <GripHorizontal className="size-4 opacity-60" />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="size-4 opacity-60" aria-hidden="true">
+            <circle cx="9" cy="12" r="1.5" />
+            <circle cx="9" cy="5" r="1.5" />
+            <circle cx="9" cy="19" r="1.5" />
+            <circle cx="15" cy="12" r="1.5" />
+            <circle cx="15" cy="5" r="1.5" />
+            <circle cx="15" cy="19" r="1.5" />
+          </svg>
         </span>
         <span className="font-mono font-semibold uppercase tracking-wider text-[10px] text-[var(--color-text-tertiary)]">
           Progressive Blur Controls

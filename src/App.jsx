@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -8,9 +8,17 @@ import RubricSection from './components/RubricSection';
 import Footer from './components/Footer';
 import LandingPage from './components/LandingPage';
 import Skiper8 from './components/ui/skiper-ui/skiper8';
-import GitHubGuide from './components/GitHubGuide';
-import ScreenshotGuide from './components/ScreenshotGuide';
 import StudentNameModal from './components/StudentNameModal';
+
+// Code-split heavy reference guides (downloaded on-demand only when student navigates to them)
+const GitHubGuide = lazy(() => import('./components/GitHubGuide'));
+const ScreenshotGuide = lazy(() => import('./components/ScreenshotGuide'));
+
+const GuideLoadingFallback = () => (
+  <div className="wrap" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-tertiary)', fontSize: '0.9375rem' }}>
+    Loading guide...
+  </div>
+);
 
 export default function App() {
   const [studentName, setStudentName] = useState(() => {
@@ -153,7 +161,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {currentView === 'landing' ? (
+      {showNameModal || showPreloader ? null : currentView === 'landing' ? (
         <LandingPage
           onSelectTrack={handleSelectTrack}
           studentName={studentName}
@@ -169,10 +177,12 @@ export default function App() {
             onToggleTheme={toggleTheme}
           />
           <main id="top">
-            <GitHubGuide
-              onBackToAssignment={handleBackToAssignment}
-              studentName={studentName}
-            />
+            <Suspense fallback={<GuideLoadingFallback />}>
+              <GitHubGuide
+                onBackToAssignment={handleBackToAssignment}
+                studentName={studentName}
+              />
+            </Suspense>
           </main>
           <Footer
             onBackToHome={handleBackToLanding}
@@ -190,10 +200,12 @@ export default function App() {
             onToggleTheme={toggleTheme}
           />
           <main id="top">
-            <ScreenshotGuide
-              onBackToAssignment={handleBackToAssignment}
-              studentName={studentName}
-            />
+            <Suspense fallback={<GuideLoadingFallback />}>
+              <ScreenshotGuide
+                onBackToAssignment={handleBackToAssignment}
+                studentName={studentName}
+              />
+            </Suspense>
           </main>
           <Footer
             onBackToHome={handleBackToLanding}

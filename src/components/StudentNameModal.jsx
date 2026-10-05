@@ -46,7 +46,7 @@ export default function StudentNameModal({
     >
       <div className="name-modal-card">
         <div className="name-modal-badge">
-          <span>👋 Welcome</span>
+          <span> Welcome to the Platform</span>
         </div>
 
         <h2 id="name-modal-title" className="name-modal-title">

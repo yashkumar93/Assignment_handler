@@ -1,11 +1,5 @@
 @import "tailwindcss";
 
-@theme {
-  --color-foreground: var(--color-text-primary);
-  --color-background: var(--color-bg-canvas);
-  --spacing-15: 3.75rem;
-}
-
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -1569,9 +1563,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background-color: #141516; /* Solid dark background matching the loading animation screen */
   padding: 1.5rem;
   animation: fadeIn 220ms ease;
 }
@@ -1584,7 +1576,7 @@ section {
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   padding: clamp(1.75rem, 5vw, 2.5rem);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--color-border-subtle);
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
   animation: modalPop 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
