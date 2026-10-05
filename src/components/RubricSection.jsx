@@ -4,9 +4,8 @@ export default function RubricSection() {
   const rubricData = [
     { criteria: 'Required Content & Single-Page Structure', marks: 4 },
     { criteria: 'HTML/CSS/JS Implementation', marks: 3 },
-    { criteria: 'UI/UX & Visual Design', marks: 2 },
+    { criteria: 'UI/UX & Visual Design', marks: 3 },
     { criteria: 'Creativity & Uniqueness', marks: 2 },
-    { criteria: 'Dark Mode Implementation', marks: 1 },
     { criteria: 'GitHub Repository Submission', marks: 1 },
     { criteria: 'Niat.tech Deployment', marks: 1 },
     { criteria: 'Authenticity / Appropriate AI Use', marks: 1 },

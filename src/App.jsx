@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import FormfacadeEmbed from "@formfacade/embed-react";
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import StructureSection from './components/StructureSection';
@@ -72,7 +71,10 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('niat_react_theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    try {
+      localStorage.setItem('niat_react_theme', theme);
+    } catch (e) {}
   }, [theme]);
 
   const toggleTheme = () => {
@@ -220,18 +222,69 @@ export default function App() {
             />
             <RubricSection />
 
-            {/* Formfacade Submission Form Embed */}
-            <section id="submission-form">
+            {/* Official Google Form Submission Action */}
+            <section id="submission-form" style={{ scrollMarginTop: '6rem' }}>
               <div className="wrap">
-                <div className="section-header">
-                  <h2>Portfolio Submission Form</h2>
-                  <p>Submit your live portfolio URL, public GitHub repository, and full-page PDF screenshot below.</p>
-                </div>
-                <div className="form-embed-wrapper">
-                  <FormfacadeEmbed
-                    formFacadeURL="https://formfacade.com/include/100827912670384202283/form/1FAIpQLScvoCaCB1FQX4m6qwJdmyY_4mNClmUXTmp8H9LW46C02iPiAg/classic.js/?div=ff-compose"
-                    onSubmitForm={() => console.log('Form submitted')}
-                  />
+                <div className="submission-card">
+                  <div className="pill" style={{ marginBottom: '1rem', width: 'fit-content' }}>
+                    <span>Final Step · Official Submission</span>
+                  </div>
+                  <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', marginBottom: '0.75rem', fontWeight: 700 }}>
+                    Ready to submit your portfolio?
+                  </h2>
+                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '1rem', lineHeight: 1.6, maxWidth: '64ch', marginBottom: '2rem' }}>
+                    Make sure you have completed all 3 requirements before opening the submission form: your live deployed portfolio URL, your public GitHub repository link, and your exported full-page screenshot PDF.
+                  </p>
+
+                  <div className="submission-checklist-preview">
+                    <div className="sub-check-pill">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span>1. Live Deployment URL</span>
+                    </div>
+                    <div className="sub-check-pill">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span>2. Public GitHub Repo URL</span>
+                    </div>
+                    <div className="sub-check-pill">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span>3. Full-Page Screenshot PDF</span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBlockStart: '2rem' }}>
+                    <a
+                      href="https://forms.gle/1wHqKKibLkC69xBJ7"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
+                      style={{
+                        minHeight: '48px',
+                        paddingInline: '28px',
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.625rem',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      <span>Open Google Form</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </a>
+                    <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-tertiary)' }}>
+                      Opens Google Form in a new tab
+                    </span>
+                  </div>
                 </div>
               </div>
             </section>

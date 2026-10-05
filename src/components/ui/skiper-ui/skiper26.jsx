@@ -378,12 +378,14 @@ export const useThemeToggle = ({
     updateStyles(animation.css);
 
     const switchTheme = () => {
+      document.documentElement.setAttribute("data-theme", nextTheme);
+      document.documentElement.classList.toggle("dark", nextTheme === "dark");
+      setInternalTheme(nextTheme);
+      try {
+        localStorage.setItem("niat_react_theme", nextTheme);
+      } catch (e) {}
       if (controlledToggle) {
         controlledToggle();
-      } else {
-        setInternalTheme(nextTheme);
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        document.documentElement.classList.toggle("dark", nextTheme === "dark");
       }
     };
 

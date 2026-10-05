@@ -88,9 +88,8 @@ export default function StructureSection({ studentName }) {
         'GitHub',
         'LinkedIn',
         'Contact information',
-        'Dark Mode toggle',
+
       ],
-      note: 'It should be visible in the navigation bar. For example, clicking the toggle should change the website between: Light Mode ↔ Dark Mode.',
     },
   ];
 

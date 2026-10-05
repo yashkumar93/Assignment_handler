@@ -34,19 +34,19 @@
   --neutral-500: #64748B;
   --neutral-600: #475569;
   --neutral-700: #334155;
-  --neutral-800: #1E293B;
-  --neutral-900: #0F172A;
-  --neutral-950: #0B1120;
+  --neutral-800: #18181B;
+  --neutral-900: #0F0F12;
+  --neutral-950: #09090B;
 
-  /* Primitive Accent (Cobalt) */
+  /* Primitive Accent (Cobalt for Light Mode) */
   --accent-50: #EFF6FF;
   --accent-100: #DBEAFE;
   --accent-200: #BFDBFE;
   --accent-600: #1D4ED8;
   --accent-700: #1E40AF;
-  --accent-dark-subtle: #172554;
-  --accent-dark-border: #1E3A8A;
-  --accent-dark-text: #60A5FA;
+  --accent-dark-subtle: #18181C;
+  --accent-dark-border: #2C2C34;
+  --accent-dark-text: #F4F4F6;
 }
 
 [dir="rtl"] {
@@ -82,33 +82,33 @@
   --shadow-card-hover: 0 4px 16px rgba(15, 23, 42, 0.08);
 }
 
-/* Dark Theme */
+/* Dark Theme (Pure Obsidian / Neutral Dark - Zero Blue Tint) */
 [data-theme="dark"] {
-  --color-bg-canvas: var(--neutral-950);
-  --color-bg-surface: #131D31;
-  --color-bg-surface-alt: var(--neutral-800);
+  --color-bg-canvas: #09090B;
+  --color-bg-surface: #121214;
+  --color-bg-surface-alt: #18181B;
 
-  --color-border-subtle: var(--neutral-800);
-  --color-border-default: #2A3950;
-  --color-border-strong: #3D506E;
+  --color-border-subtle: #202024;
+  --color-border-default: #2A2A30;
+  --color-border-strong: #3D3D46;
 
-  --color-text-primary: var(--neutral-50);
-  --color-text-secondary: var(--neutral-300);
-  --color-text-tertiary: var(--neutral-400);
+  --color-text-primary: #F4F4F6;
+  --color-text-secondary: #A1A1AA;
+  --color-text-tertiary: #71717A;
 
-  --color-accent-solid: var(--neutral-50);
-  --color-accent-solid-hover: var(--neutral-200);
-  --color-accent-solid-text: var(--neutral-950);
+  --color-accent-solid: #F4F4F6;
+  --color-accent-solid-hover: #FFFFFF;
+  --color-accent-solid-text: #09090B;
 
-  --color-accent-subtle: var(--accent-dark-subtle);
-  --color-accent-border: var(--accent-dark-border);
-  --color-accent-text: var(--accent-dark-text);
+  --color-accent-subtle: #18181C;
+  --color-accent-border: #2C2C34;
+  --color-accent-text: #F4F4F6;
 
-  --color-focus-ring: var(--accent-dark-text);
+  --color-focus-ring: rgba(255, 255, 255, 0.4);
 
-  --shadow-nav: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-nav: 0 1px 3px rgba(0, 0, 0, 0.7);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.6);
 }
 
 html {
@@ -691,15 +691,44 @@ section {
   font-size: 1rem;
 }
 
-/* Formfacade Embed Section */
-.form-embed-wrapper {
+/* Submission Action Card */
+.submission-card {
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
-  padding: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(2rem, 5vw, 3.5rem);
   box-shadow: var(--shadow-card);
-  min-height: 480px;
+  position: relative;
   overflow: hidden;
+}
+
+.submission-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-accent-solid), #10B981);
+}
+
+.submission-checklist-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.sub-check-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 8px 14px;
+  background: var(--color-bg-surface-alt);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 /* Footer */

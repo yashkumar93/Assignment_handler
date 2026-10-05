@@ -22,10 +22,10 @@ export default function RequirementsSection({ onOpenGithubGuide, onOpenPdfGuide,
             </p>
 
             <div className="req-sub-box">
-              <strong>They must submit:</strong>
+              <strong>{studentName ? `${studentName} must submit:` : 'They must submit:'}</strong>
               <span>Live Portfolio URL</span>
               <div style={{ marginTop: '0.5rem' }}>
-                <code>https://yassh.niat.tech/</code>
+                <code>https://{slug}.niat.tech/</code>
               </div>
             </div>
 
@@ -175,8 +175,7 @@ export default function RequirementsSection({ onOpenGithubGuide, onOpenPdfGuide,
               <strong>{studentName ? `${studentName} must submit:` : 'The student must submit:'}</strong>
               <span>Full-Page Portfolio PDF file (uploaded in the submission form)</span>
               <div style={{ marginTop: '0.5rem' }}>
-
-                <code>Yash_portfolio.pdf</code>
+                <code>{studentName ? `${studentName.replace(/\s+/g, '_')}_portfolio.pdf` : 'Student_portfolio.pdf'}</code>
               </div>
             </div>
 

@@ -256,8 +256,29 @@ export default function ScreenshotGuide({ onBackToAssignment, studentName }) {
               <div className="step-body">
                 <h3>Upload to the Google Form</h3>
                 <p>
-                  Open the submission form on the main assignment page (or the link from your instructor), choose the file upload field, and select your PDF file. Submit and keep your confirmation screenshot.
+                  Open the official submission form, select your exported PDF file, and provide your live URL and public GitHub link. Submit before the deadline and keep your confirmation screenshot.
                 </p>
+                <div style={{ marginTop: '0.875rem' }}>
+                  <a
+                    href="https://forms.gle/1wHqKKibLkC69xBJ7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary btn-sm"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <span>Open Submission Form</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
