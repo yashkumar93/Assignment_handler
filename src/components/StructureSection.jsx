@@ -1,8 +1,8 @@
 import React from 'react';
 import { ProgressiveBlur } from './ui/skiper-ui/skiper41';
-import { Skiper26 } from './ui/skiper-ui/skiper26';
 
-export default function StructureSection({ theme, onToggleTheme }) {
+export default function StructureSection({ studentName }) {
+  const displayName = studentName?.trim() || '';
   const sections = [
     {
       num: '1',
@@ -11,12 +11,9 @@ export default function StructureSection({ theme, onToggleTheme }) {
       badge: 'Required',
       description: 'The navigation bar should contain:',
       items: [
-        "Student's name/logo",
-        'About',
+        displayName ? `Student's name (${displayName})` : "Student's name",
         'Skills',
-        'Education',
         'Projects',
-        'Contact/footer link',
         'Dark Mode / Light Mode toggle',
       ],
       note: 'The navigation links should scroll to sections within the same page.',
@@ -28,7 +25,7 @@ export default function StructureSection({ theme, onToggleTheme }) {
       badge: 'Required',
       description: 'Include:',
       items: [
-        'Full name',
+        displayName ? `Full name (${displayName})` : 'Full name',
         'Short personal bio',
         'Introduction',
         'Academic/career interests',
@@ -36,7 +33,7 @@ export default function StructureSection({ theme, onToggleTheme }) {
       ],
     },
     {
-      num: '4',
+      num: '3',
       id: 'skills',
       title: 'Skills',
       badge: 'Required',
@@ -50,7 +47,7 @@ export default function StructureSection({ theme, onToggleTheme }) {
       note: 'Students should not list skills they cannot explain.',
     },
     {
-      num: '5',
+      num: '4',
       id: 'education',
       title: 'Education',
       badge: 'Required',
@@ -63,7 +60,7 @@ export default function StructureSection({ theme, onToggleTheme }) {
       ],
     },
     {
-      num: '6',
+      num: '5',
       id: 'projects',
       title: 'Projects',
       badge: 'Optional',
@@ -79,14 +76,14 @@ export default function StructureSection({ theme, onToggleTheme }) {
       ],
     },
     {
-      num: '7',
+      num: '6',
       id: 'footer-spec',
       title: 'Footer',
       badge: 'Required',
       description:
         'The footer should contain relevant information such as (correct links should be there):',
       items: [
-        'Student name',
+        displayName ? `Student name (${displayName})` : 'Student name',
         'Copyright/year',
         'GitHub',
         'LinkedIn',
@@ -104,44 +101,42 @@ export default function StructureSection({ theme, onToggleTheme }) {
       <ProgressiveBlur position="bottom" height="70px" blurAmount="8px" />
 
       <div className="wrap" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
-          <div>
-            <div className="pill" style={{ marginBottom: '0.75rem' }}>
-              <span>Section Overview · Progressive Blur Active</span>
-            </div>
-            <h2>Required Website Structure</h2>
-            <p>Required structure (in this order). The portfolio must be a single-page website.</p>
-          </div>
-
-          <Skiper26 theme={theme} onToggleTheme={onToggleTheme} />
+        <div className="section-header">
+          <h2>Required Website Structure</h2>
+          <p>Required structure (in this order). The portfolio must be a single-page website.</p>
         </div>
 
         <div className="structure-grid">
-          {sections.map((sec) => (
-            <div key={sec.num} className="structure-card" id={sec.id}>
-              <div className="card-top">
-                <span className="card-num">{sec.num}</span>
-                <span className="pill">{sec.badge}</span>
+          {sections.map((sec) => {
+            const isOpt = sec.badge === 'Optional';
+            return (
+              <div key={sec.id} className={`structure-card ${isOpt ? 'is-optional' : ''}`} id={sec.id}>
+                <div className="card-top">
+                  <span className="card-num">{sec.num}</span>
+                  <span className={`pill ${isOpt ? 'pill-optional' : ''}`}>{sec.badge}</span>
+                </div>
+                <div className="card-body-group">
+                  <h3>{sec.title}</h3>
+                  <p>{sec.description}</p>
+                  {sec.subheading && (
+                    <p style={{ marginBlockStart: '0.5rem', fontWeight: 600, fontSize: '0.8125rem' }}>
+                      {sec.subheading}
+                    </p>
+                  )}
+                </div>
+                <ul className="item-list">
+                  {sec.items.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+                {sec.note && (
+                  <p className="card-note" style={{ marginBlockStart: 'auto', fontSize: '0.8125rem', color: 'var(--color-text-tertiary)' }}>
+                    {sec.note}
+                  </p>
+                )}
               </div>
-              <h3>{sec.title}</h3>
-              <p>{sec.description}</p>
-              {sec.subheading && (
-                <p style={{ marginTop: '0.5rem', fontWeight: 600, fontSize: '0.8125rem' }}>
-                  {sec.subheading}
-                </p>
-              )}
-              <ul className="item-list">
-                {sec.items.map((item, idx) => (
-                  <li key={idx}>{item}</li>
-                ))}
-              </ul>
-              {sec.note && (
-                <p style={{ marginTop: '0.5rem', fontSize: '0.8125rem', color: 'var(--color-text-tertiary)' }}>
-                  {sec.note}
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
