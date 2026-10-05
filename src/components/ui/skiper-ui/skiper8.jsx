@@ -20,8 +20,8 @@ export const opacity = {
     opacity: 0,
   },
   enter: {
-    opacity: 0.85,
-    transition: { duration: 0.6, delay: 0.2 },
+    opacity: 1,
+    transition: { duration: 0.5, delay: 0.1 },
   },
 };
 
@@ -33,7 +33,7 @@ export const slideUp = {
   exit: {
     y: "-100%",
     opacity: 1,
-    transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
+    transition: { duration: 0.8, ease: [0.76, 0.21, 0.9, 1] },
     transitionEnd: {
       display: "none",
     },
@@ -42,8 +42,13 @@ export const slideUp = {
 
 const Skiper8 = ({
   words = DEFAULT_WORDS,
+  studentName = "",
   backgroundColor = "#141516",
   textColor = "#ffffff",
+  firstWordDelay = 850, // 👈 1. First word ("Hello"): generous time (0.85s)
+  fastWordDelay = 260,  // 👈 2. Middle greetings ("नमस्ते", "Welcome"): fast & snappy (0.26s)
+  nameWordDelay = 950,  // 👈 3. Student's Name: generous time to read & enjoy (0.95s)
+  lastWordDelay = 900,  // 👈 4. Final word ("Assignment Portal"): 900ms before curtain exit (0.9s)
   onComplete,
   className = "",
 }) => {
@@ -63,10 +68,10 @@ const Skiper8 = ({
 
     updateDimension();
     window.addEventListener("resize", updateDimension);
-    
+
     // Lock body scroll while preloader is active
     document.body.style.overflow = "hidden";
-    
+
     return () => {
       window.removeEventListener("resize", updateDimension);
       document.body.style.overflow = "";
@@ -74,25 +79,35 @@ const Skiper8 = ({
   }, []);
 
   useEffect(() => {
+    // If it's the very last word, wait for lastWordDelay before sliding up
     if (index === words.length - 1) {
       if (onComplete) {
         const exitTimer = setTimeout(() => {
           onComplete();
-        }, 400);
+        }, lastWordDelay);
         return () => clearTimeout(exitTimer);
       }
       return;
     }
 
-    const timer = setTimeout(
-      () => {
-        setIndex((prev) => prev + 1);
-      },
-      index === 0 ? 1000 : 160
-    );
+    const currentWord = words[index];
+    const isFirstWord = index === 0;
+    const isNameWord = (studentName && currentWord === studentName) || (!studentName && index === words.length - 2);
+
+    // Dynamic delay: First word and Student name get extra time, other greetings are fast
+    let delay = fastWordDelay;
+    if (isFirstWord) {
+      delay = firstWordDelay;
+    } else if (isNameWord) {
+      delay = nameWordDelay;
+    }
+
+    const timer = setTimeout(() => {
+      setIndex((prev) => prev + 1);
+    }, delay);
 
     return () => clearTimeout(timer);
-  }, [index, words.length, onComplete]);
+  }, [index, words, onComplete, firstWordDelay, fastWordDelay, nameWordDelay, lastWordDelay, studentName]);
 
   const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
   const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
@@ -158,16 +173,3 @@ const Skiper8 = ({
 export { Skiper8, Skiper8 as Preloader_002 };
 export default Skiper8;
 
-/**
- * Words Preloader Component — skiper8 v1.0.0
- * Inspired by Dennis Snellenberg (dennissnellenberg.com) & Skiper UI (@skiper-ui/skiper8)
- * Built with Framer Motion for React
- *
- * License & Usage:
- * - Free to use and modify in both personal and commercial projects.
- * - Attribution to Skiper UI is required when using the free version.
- * - No attribution required with Skiper UI Pro.
- *
- * Author: @skiper-ui
- * Website: https://skiper-ui.com/v1/skiper8
- */

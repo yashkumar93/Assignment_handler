@@ -1,9 +1,8 @@
 import React from 'react';
 import SkipperCanvas from './SkipperCanvas';
 import BrandLogo from './BrandLogo';
-import { ThemeToggleButton } from './ui/skiper-ui/skiper26';
 
-export default function LandingPage({ onSelectTrack, studentName, theme, onToggleTheme }) {
+export default function LandingPage({ onSelectTrack, studentName }) {
   return (
     <div className="landing-wrapper">
       {/* Skipper Animated Walking Crowd Canvas Background */}
@@ -23,14 +22,6 @@ export default function LandingPage({ onSelectTrack, studentName, theme, onToggl
             </span>
           )}
         </div>
-
-        {onToggleTheme && (
-          <ThemeToggleButton
-            theme={theme}
-            onToggleTheme={onToggleTheme}
-            className="navbar-theme-toggle"
-          />
-        )}
       </header>
 
       {/* Main Centered Buttons (No Dialog Box) */}

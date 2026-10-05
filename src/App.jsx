@@ -70,12 +70,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    const activeTheme = currentView === 'landing' ? 'light' : theme;
+    document.documentElement.setAttribute('data-theme', activeTheme);
+    document.documentElement.classList.toggle('dark', activeTheme === 'dark');
     try {
       localStorage.setItem('niat_react_theme', theme);
-    } catch (e) {}
-  }, [theme]);
+    } catch (e) { }
+  }, [theme, currentView]);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
@@ -87,7 +88,7 @@ export default function App() {
     setStudentName(trimmed);
     try {
       localStorage.setItem('niat_student_name', trimmed);
-    } catch (e) {}
+    } catch (e) { }
 
     setShowNameModal(false);
     setShowPreloader(true);
@@ -129,8 +130,9 @@ export default function App() {
 
   // Personalized words for the Skiper8 loading animation
   const preloaderWords = studentName
-    ? ['Hello', 'Welcome', studentName, 'Portfolio Assignment']
-    : ['Hello', 'Welcome', 'Portfolio Assignment'];
+    ? ['Hello', 'नमस्ते', 'Hola!', 'Bonjour', 'Ciao', 'Konnichiwa', 'Hallo', 'Olá', 'Welcome', studentName, 'Assignment Portal']
+
+    : ['Hello', 'Welcome', 'Assignment Portal'];
 
   return (
     <div className="app-container">
@@ -145,6 +147,7 @@ export default function App() {
         {showPreloader && (
           <Skiper8
             words={preloaderWords}
+            studentName={studentName}
             onComplete={() => setShowPreloader(false)}
           />
         )}
@@ -154,8 +157,6 @@ export default function App() {
         <LandingPage
           onSelectTrack={handleSelectTrack}
           studentName={studentName}
-          theme={theme}
-          onToggleTheme={toggleTheme}
         />
       ) : currentView === 'github-guide' ? (
         <>
@@ -263,6 +264,7 @@ export default function App() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-primary"
+                      id="btn-open-google-form"
                       style={{
                         minHeight: '48px',
                         paddingInline: '28px',
@@ -274,8 +276,8 @@ export default function App() {
                         textDecoration: 'none',
                       }}
                     >
-                      <span>Open Google Form</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <span style={{ color: 'inherit', fontWeight: 600 }}>Open Google Form</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ color: 'inherit' }}>
                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                         <polyline points="15 3 21 3 21 9"></polyline>
                         <line x1="10" y1="14" x2="21" y2="3"></line>
