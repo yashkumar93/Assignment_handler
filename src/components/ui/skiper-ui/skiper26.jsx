@@ -382,7 +382,7 @@ export const useThemeToggle = ({
       setInternalTheme(nextTheme);
       try {
         localStorage.setItem("niat_react_theme", nextTheme);
-      } catch (e) {}
+      } catch (e) { }
       if (controlledToggle) {
         controlledToggle();
       }
@@ -495,6 +495,7 @@ export const Options = ({
       </div>
 
       <div className="flex flex-col gap-2 pt-1">
+
         <div className="flex items-center justify-between">
           <span className="text-[var(--color-text-tertiary)] font-mono">blur:</span>
           <div className="flex items-center gap-1">

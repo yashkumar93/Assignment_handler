@@ -20,8 +20,8 @@ export const opacity = {
     opacity: 0,
   },
   enter: {
-    opacity: 1,
-    transition: { duration: 0.5, delay: 0.1 },
+    opacity: 0.85,
+    transition: { duration: 2.0, delay: 0.1 },
   },
 };
 
@@ -33,7 +33,7 @@ export const slideUp = {
   exit: {
     y: "-100%",
     opacity: 1,
-    transition: { duration: 0.8, ease: [0.76, 0.21, 0.9, 1] },
+    transition: { duration: 0.8, ease: [0.76, 0.21, 0.8, 1] },
     transitionEnd: {
       display: "none",
     },
@@ -42,13 +42,12 @@ export const slideUp = {
 
 const Skiper8 = ({
   words = DEFAULT_WORDS,
-  studentName = "",
   backgroundColor = "#141516",
   textColor = "#ffffff",
-  firstWordDelay = 850, // 👈 1. First word ("Hello"): generous time (0.85s)
-  fastWordDelay = 260,  // 👈 2. Middle greetings ("नमस्ते", "Welcome"): fast & snappy (0.26s)
-  nameWordDelay = 950,  // 👈 3. Student's Name: generous time to read & enjoy (0.95s)
-  lastWordDelay = 900,  // 👈 4. Final word ("Assignment Portal"): 900ms before curtain exit (0.9s)
+  firstWordDelay = 900,      // 👈 line 47 (First word duration: 0.9s)
+  wordDuration = 550,        // 👈 line 48 (Middle words duration: 0.75s)
+  lastWordDelay = 900,      // 👈 line 49 (Final word duration: 1.1s)
+
   onComplete,
   className = "",
 }) => {
@@ -79,35 +78,25 @@ const Skiper8 = ({
   }, []);
 
   useEffect(() => {
-    // If it's the very last word, wait for lastWordDelay before sliding up
     if (index === words.length - 1) {
       if (onComplete) {
         const exitTimer = setTimeout(() => {
           onComplete();
-        }, lastWordDelay);
+        }, 400);
         return () => clearTimeout(exitTimer);
       }
       return;
     }
 
-    const currentWord = words[index];
-    const isFirstWord = index === 0;
-    const isNameWord = (studentName && currentWord === studentName) || (!studentName && index === words.length - 2);
-
-    // Dynamic delay: First word and Student name get extra time, other greetings are fast
-    let delay = fastWordDelay;
-    if (isFirstWord) {
-      delay = firstWordDelay;
-    } else if (isNameWord) {
-      delay = nameWordDelay;
-    }
-
-    const timer = setTimeout(() => {
-      setIndex((prev) => prev + 1);
-    }, delay);
+    const timer = setTimeout(
+      () => {
+        setIndex((prev) => prev + 1);
+      },
+      index === 0 ? 1000 : 160
+    );
 
     return () => clearTimeout(timer);
-  }, [index, words, onComplete, firstWordDelay, fastWordDelay, nameWordDelay, lastWordDelay, studentName]);
+  }, [index, words.length, onComplete]);
 
   const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height + 300} 0 ${dimension.height} L0 0`;
   const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${dimension.height} Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height} L0 0`;
