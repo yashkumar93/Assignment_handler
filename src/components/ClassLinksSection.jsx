@@ -25,7 +25,10 @@ import {
   Lock,
   Unlock,
   ShieldCheck,
-  KeyRound
+  KeyRound,
+  Cloud,
+  CloudOff,
+  RefreshCw
 } from 'lucide-react';
 import {
   initialClassLinks,
@@ -39,42 +42,42 @@ import {
   normalizeLink,
   parseBulkPastedText,
 } from '../data/classLinks';
+import {
+  isSupabaseConfigured,
+  fetchDbLinks,
+  insertDbLink,
+  insertDbLinksBulk,
+  updateDbLink,
+  deleteDbLink,
+  clearAllDbLinks,
+  subscribeToClassLinks,
+  mapRowToLink,
+} from '../lib/supabase';
 
 export default function ClassLinksSection({ studentName }) {
-  // Load links from localStorage, clearing out any previous dummy test links
+  // Load initial links from localStorage or fall back to initialClassLinks
   const [links, setLinks] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
         const dummyIds = ['link-starter-repo', 'link-figma-spec', 'link-mdn-guide', 'link-assets-drive'];
-        const cleanedFlag = localStorage.getItem('niat_cleared_dummy_links_v2');
-        if (!cleanedFlag) {
-          localStorage.setItem('niat_cleared_dummy_links_v2', 'true');
-          const saved = localStorage.getItem(NIAT_CLASS_LINKS_STORAGE_KEY);
-          if (saved) {
-            const parsed = JSON.parse(saved);
-            const filtered = Array.isArray(parsed)
-              ? parsed.filter((item) => !dummyIds.includes(item.id))
-              : [];
-            localStorage.setItem(NIAT_CLASS_LINKS_STORAGE_KEY, JSON.stringify(filtered));
-            return filtered.map((item, idx) => normalizeLink(item, idx));
-          }
-          return [];
-        }
-
         const saved = localStorage.getItem(NIAT_CLASS_LINKS_STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed)) {
+          if (Array.isArray(parsed) && parsed.length > 0) {
             const filtered = parsed.filter((item) => !dummyIds.includes(item.id));
-            return filtered.map((item, idx) => normalizeLink(item, idx));
+            if (filtered.length > 0) {
+              return filtered.map((item, idx) => normalizeLink(item, idx));
+            }
           }
         }
       } catch (err) {
         console.error('Failed to parse saved class links:', err);
       }
     }
-    return [];
+    return (initialClassLinks || []).map((item, idx) => normalizeLink(item, idx));
   });
+
+  const [isLoadingDb, setIsLoadingDb] = useState(isSupabaseConfigured);
 
   // Admin authentication state
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -115,7 +118,7 @@ export default function ClassLinksSection({ studentName }) {
     pinned: false,
   });
 
-  // Save to localStorage whenever links change
+  // Save to localStorage and state
   const saveLinks = (updatedLinks) => {
     setLinks(updatedLinks);
     try {
@@ -130,6 +133,80 @@ export default function ClassLinksSection({ studentName }) {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(''), 3000);
   };
+
+  // Sync from Supabase database & listen for live changes across all devices
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    let isMounted = true;
+    setIsLoadingDb(true);
+
+    // Initial fetch from cloud database
+    fetchDbLinks().then(({ data, error }) => {
+      if (!isMounted) return;
+      setIsLoadingDb(false);
+      if (!error && Array.isArray(data)) {
+        if (data.length > 0) {
+          setLinks(data);
+          try {
+            localStorage.setItem(NIAT_CLASS_LINKS_STORAGE_KEY, JSON.stringify(data));
+          } catch {}
+        } else if (initialClassLinks && initialClassLinks.length > 0) {
+          // If Supabase table is fresh, seed default links
+          const seeds = initialClassLinks.map((item, idx) => normalizeLink(item, idx));
+          setLinks(seeds);
+          insertDbLinksBulk(seeds).catch(() => {});
+        }
+      }
+    });
+
+    // Realtime postgres changes subscription
+    const unsubscribe = subscribeToClassLinks((payload) => {
+      if (!isMounted) return;
+
+      if (payload.eventType === 'INSERT') {
+        const newLink = mapRowToLink(payload.new);
+        if (newLink) {
+          setLinks((prev) => {
+            if (prev.some((item) => item.id === newLink.id)) return prev;
+            const updated = [newLink, ...prev];
+            try {
+              localStorage.setItem(NIAT_CLASS_LINKS_STORAGE_KEY, JSON.stringify(updated));
+            } catch {}
+            return updated;
+          });
+          showToast(`⚡ Live Drop: "${newLink.title}"`);
+        }
+      } else if (payload.eventType === 'UPDATE') {
+        const updatedLink = mapRowToLink(payload.new);
+        if (updatedLink) {
+          setLinks((prev) => {
+            const updated = prev.map((item) => (item.id === updatedLink.id ? updatedLink : item));
+            try {
+              localStorage.setItem(NIAT_CLASS_LINKS_STORAGE_KEY, JSON.stringify(updated));
+            } catch {}
+            return updated;
+          });
+        }
+      } else if (payload.eventType === 'DELETE') {
+        const deletedId = payload.old ? String(payload.old.id) : null;
+        if (deletedId) {
+          setLinks((prev) => {
+            const updated = prev.filter((item) => item.id !== deletedId);
+            try {
+              localStorage.setItem(NIAT_CLASS_LINKS_STORAGE_KEY, JSON.stringify(updated));
+            } catch {}
+            return updated;
+          });
+        }
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
+  }, []);
 
   // Sync from URL parameter on load (if instructor shared a link with students)
   useEffect(() => {
@@ -152,7 +229,7 @@ export default function ClassLinksSection({ studentName }) {
     }
   }, []);
 
-  // Sync across tabs
+  // Sync across tabs locally
   useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === NIAT_CLASS_LINKS_STORAGE_KEY || e.type === 'class_links_updated') {
@@ -220,7 +297,7 @@ export default function ClassLinksSection({ studentName }) {
   };
 
   // Quick Inline Link Drop (Primary Fast Method for Class)
-  const handleInlineDrop = (e) => {
+  const handleInlineDrop = async (e) => {
     if (e) e.preventDefault();
     if (!isAdmin) {
       setIsAdminModalOpen(true);
@@ -231,19 +308,26 @@ export default function ClassLinksSection({ studentName }) {
     if (!text) return;
 
     const parsed = parseBulkPastedText(text);
-    if (parsed.length > 0) {
-      saveLinks([...parsed, ...links]);
-      setInlineInput('');
-      showToast(
-        parsed.length === 1
-          ? `Dropped: "${parsed[0].title}"`
-          : `Dropped ${parsed.length} links to student view!`
-      );
-    } else {
-      const single = normalizeLink(text);
-      saveLinks([single, ...links]);
-      setInlineInput('');
-      showToast(`Dropped: "${single.title}"`);
+    const toAdd = parsed.length > 0 ? parsed : [normalizeLink(text)];
+
+    saveLinks([...toAdd, ...links]);
+    setInlineInput('');
+    showToast(
+      toAdd.length === 1
+        ? `Dropped: "${toAdd[0].title}"`
+        : `Dropped ${toAdd.length} links to student view!`
+    );
+
+    if (isSupabaseConfigured) {
+      try {
+        if (toAdd.length === 1) {
+          await insertDbLink(toAdd[0]);
+        } else {
+          await insertDbLinksBulk(toAdd);
+        }
+      } catch (err) {
+        console.warn('Failed to sync link to Supabase:', err);
+      }
     }
   };
 
@@ -287,7 +371,7 @@ export default function ClassLinksSection({ studentName }) {
   };
 
   // Handle delete link (admin only)
-  const handleDeleteLink = (id) => {
+  const handleDeleteLink = async (id) => {
     if (!isAdmin) {
       setIsAdminModalOpen(true);
       return;
@@ -295,20 +379,38 @@ export default function ClassLinksSection({ studentName }) {
     const next = links.filter((item) => item.id !== id);
     saveLinks(next);
     showToast('Link removed');
+
+    if (isSupabaseConfigured) {
+      try {
+        await deleteDbLink(id);
+      } catch (err) {
+        console.warn('Failed to delete from Supabase:', err);
+      }
+    }
   };
 
   // Handle toggle pin (admin only)
-  const handleTogglePin = (id) => {
+  const handleTogglePin = async (id) => {
     if (!isAdmin) {
       setIsAdminModalOpen(true);
       return;
     }
-    const next = links.map((item) => (item.id === id ? { ...item, pinned: !item.pinned } : item));
+    const target = links.find((item) => item.id === id);
+    const nextPinned = target ? !target.pinned : false;
+    const next = links.map((item) => (item.id === id ? { ...item, pinned: nextPinned } : item));
     saveLinks(next);
+
+    if (isSupabaseConfigured) {
+      try {
+        await updateDbLink(id, { pinned: nextPinned });
+      } catch (err) {
+        console.warn('Failed to update pin in Supabase:', err);
+      }
+    }
   };
 
   // Handle Bulk Paste submit
-  const handleBulkSubmit = (e) => {
+  const handleBulkSubmit = async (e) => {
     e.preventDefault();
     if (!isAdmin) {
       setIsAdminModalOpen(true);
@@ -320,8 +422,23 @@ export default function ClassLinksSection({ studentName }) {
 
     if (pasteMode === 'replace') {
       saveLinks(parsed);
+      if (isSupabaseConfigured) {
+        try {
+          await clearAllDbLinks();
+          await insertDbLinksBulk(parsed);
+        } catch (err) {
+          console.warn('Bulk replace in Supabase failed:', err);
+        }
+      }
     } else {
       saveLinks([...parsed, ...links]);
+      if (isSupabaseConfigured) {
+        try {
+          await insertDbLinksBulk(parsed);
+        } catch (err) {
+          console.warn('Bulk append in Supabase failed:', err);
+        }
+      }
     }
 
     setBulkText('');
@@ -330,7 +447,7 @@ export default function ClassLinksSection({ studentName }) {
   };
 
   // Handle Single Link submit
-  const handleSingleSubmit = (e) => {
+  const handleSingleSubmit = async (e) => {
     e.preventDefault();
     if (!isAdmin) {
       setIsAdminModalOpen(true);
@@ -357,10 +474,18 @@ export default function ClassLinksSection({ studentName }) {
     });
     setIsModalOpen(false);
     showToast(`Published "${newLink.title}"!`);
+
+    if (isSupabaseConfigured) {
+      try {
+        await insertDbLink(newLink);
+      } catch (err) {
+        console.warn('Single link insert to Supabase failed:', err);
+      }
+    }
   };
 
   // Handle Clear All Links (Admin only)
-  const handleClearAllLinks = () => {
+  const handleClearAllLinks = async () => {
     if (!isAdmin) {
       setIsAdminModalOpen(true);
       return;
@@ -369,6 +494,14 @@ export default function ClassLinksSection({ studentName }) {
       saveLinks([]);
       setIsModalOpen(false);
       showToast('All links cleared.');
+
+      if (isSupabaseConfigured) {
+        try {
+          await clearAllDbLinks();
+        } catch (err) {
+          console.warn('Clear all in Supabase failed:', err);
+        }
+      }
     }
   };
 
@@ -459,6 +592,38 @@ export default function ClassLinksSection({ studentName }) {
                 <span>Live Class Resources</span>
                 <span className="class-links-count-pill">{links.length} Links</span>
               </div>
+
+              {/* Cloud Sync Status */}
+              {isSupabaseConfigured ? (
+                <div
+                  className="admin-status-badge unlocked"
+                  title="Supabase Real-time Cloud Sync Active. Links sync automatically across student devices."
+                  style={{
+                    background: 'rgba(16, 185, 129, 0.12)',
+                    color: '#10B981',
+                    borderColor: 'rgba(16, 185, 129, 0.3)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}
+                >
+                  {isLoadingDb ? (
+                    <RefreshCw size={12} className="spin-animate" />
+                  ) : (
+                    <Cloud size={13} />
+                  )}
+                  <span>{isLoadingDb ? 'Syncing...' : 'Cloud Sync Live'}</span>
+                </div>
+              ) : (
+                <div
+                  className="admin-status-badge locked"
+                  title="Local mode. Put VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY into .env.local to enable live syncing across student devices."
+                  style={{ opacity: 0.85, display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                >
+                  <CloudOff size={12} />
+                  <span>Local Mode</span>
+                </div>
+              )}
 
               {/* Admin Mode Badge */}
               {isAdmin ? (
