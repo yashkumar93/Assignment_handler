@@ -49,6 +49,7 @@ export default function LandingPage({ onSelectTrack, studentName }) {
           <button
             type="button"
             className="landing-track-btn landing-track-btn-secondary"
+            onClick={() => onSelectTrack('genai')}
             id="btn-genai-track"
           >
             <span className="track-btn-icon" aria-hidden="true">
@@ -57,7 +58,8 @@ export default function LandingPage({ onSelectTrack, studentName }) {
               </svg>
             </span>
             <span className="track-btn-text">Generative AI</span>
-            <span className="track-btn-badge">Future</span>
+            <span className="track-btn-badge" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#8B5CF6', borderColor: 'rgba(139, 92, 246, 0.3)' }}>Active</span>
+            <span className="track-btn-arrow" aria-hidden="true">→</span>
           </button>
         </div>
 

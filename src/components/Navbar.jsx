@@ -31,9 +31,17 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, student
           aria-label="HTML & CSS Portfolio Assignment"
         >
           <BrandLogo size={26} />
-          <span style={{ fontWeight: 700 }}>HTML & CSS</span>
+          <span style={{ fontWeight: 700 }}>
+            {view === 'genai' ? 'Generative AI' : 'HTML & CSS'}
+          </span>
           <span className="pill" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
-            {view === 'github-guide' ? 'Portfolio 101' : view === 'pdf-guide' ? 'PDF Guide' : 'Portfolio Track'}
+            {view === 'genai'
+              ? 'Project Track'
+              : view === 'github-guide'
+              ? 'Portfolio 101'
+              : view === 'pdf-guide'
+              ? 'PDF Guide'
+              : 'Portfolio Track'}
           </span>
         </a>
 

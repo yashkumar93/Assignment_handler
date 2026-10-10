@@ -7,6 +7,7 @@ import RequirementsSection from './components/RequirementsSection';
 import RubricSection from './components/RubricSection';
 import Footer from './components/Footer';
 import LandingPage from './components/LandingPage';
+import GenAiSection from './components/GenAiSection';
 import Skiper8 from './components/ui/skiper-ui/skiper8';
 import StudentNameModal from './components/StudentNameModal';
 
@@ -56,6 +57,7 @@ export default function App() {
     if (typeof window !== 'undefined') {
       if (window.location.hash.includes('github-guide')) return 'github-guide';
       if (window.location.hash.includes('pdf-guide')) return 'pdf-guide';
+      if (window.location.hash.includes('genai')) return 'genai';
       if (window.location.hash.includes('html-css')) return 'assignment';
     }
     return 'landing';
@@ -67,6 +69,8 @@ export default function App() {
         setCurrentView('github-guide');
       } else if (window.location.hash.includes('pdf-guide')) {
         setCurrentView('pdf-guide');
+      } else if (window.location.hash.includes('genai')) {
+        setCurrentView('genai');
       } else if (window.location.hash.includes('html-css')) {
         setCurrentView('assignment');
       } else if (!window.location.hash) {
@@ -102,10 +106,23 @@ export default function App() {
     setShowPreloader(true);
   };
 
+  const handleUpdateStudentName = (name) => {
+    const trimmed = (name || '').trim();
+    if (!trimmed) return;
+    setStudentName(trimmed);
+    try {
+      localStorage.setItem('niat_student_name', trimmed);
+    } catch (e) { }
+  };
+
   const handleSelectTrack = (track) => {
     if (track === 'assignment' || track === 'html-css') {
       setCurrentView('assignment');
       window.location.hash = 'html-css';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (track === 'genai') {
+      setCurrentView('genai');
+      window.location.hash = 'genai';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -206,6 +223,27 @@ export default function App() {
                 studentName={studentName}
               />
             </Suspense>
+          </main>
+          <Footer
+            onBackToHome={handleBackToLanding}
+            studentName={studentName}
+          />
+        </>
+      ) : currentView === 'genai' ? (
+        <>
+          <Navbar
+            onBackToHome={handleBackToLanding}
+            studentName={studentName}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            view="genai"
+          />
+          <main id="top">
+            <GenAiSection
+              studentName={studentName}
+              onBackToHome={handleBackToLanding}
+              onUpdateStudentName={handleUpdateStudentName}
+            />
           </main>
           <Footer
             onBackToHome={handleBackToLanding}
