@@ -23,7 +23,7 @@
  */
 
 export const NIAT_CLASS_LINKS_STORAGE_KEY = 'niat_class_links';
-export const DEFAULT_ADMIN_CODE = 'niat2026';
+export const DEFAULT_ADMIN_CODE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_ADMIN_PASSCODE) || '2026';
 export const ADMIN_AUTH_KEY = 'niat_admin_unlocked';
 export const ADMIN_PASSCODE_KEY = 'niat_admin_passcode';
 
@@ -33,12 +33,12 @@ export const ADMIN_PASSCODE_KEY = 'niat_admin_passcode';
 export const initialClassLinks = [];
 
 /**
- * Validates the entered admin code against stored or default passcode
+ * Validates the entered 4-digit admin code against remote, stored, or default passcode
  */
-export function verifyAdminCode(enteredCode = '') {
+export function verifyAdminCode(enteredCode = '', remoteCode = null) {
   if (!enteredCode) return false;
   const stored = typeof window !== 'undefined' ? localStorage.getItem(ADMIN_PASSCODE_KEY) : null;
-  const target = stored || DEFAULT_ADMIN_CODE;
+  const target = remoteCode || stored || DEFAULT_ADMIN_CODE;
   return enteredCode.trim() === target.trim();
 }
 

@@ -217,3 +217,41 @@ export function subscribeToClassLinks(onPayload) {
     supabase.removeChannel(channel);
   };
 }
+
+/**
+ * Fetch remote 4-digit passcode from Supabase if stored
+ */
+export async function fetchRemotePasscode() {
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from('app_config')
+      .select('value')
+      .eq('key', 'admin_passcode')
+      .single();
+
+    if (!error && data && data.value) {
+      return String(data.value).trim();
+    }
+  } catch (err) {
+    // Config table might not exist yet; falls back to local
+  }
+  return null;
+}
+
+/**
+ * Update remote 4-digit passcode in Supabase
+ */
+export async function updateRemotePasscode(newCode) {
+  if (!supabase) return false;
+  try {
+    const { error } = await supabase
+      .from('app_config')
+      .upsert({ key: 'admin_passcode', value: String(newCode).trim() });
+
+    return !error;
+  } catch (err) {
+    console.warn('Could not update remote passcode in Supabase:', err);
+    return false;
+  }
+}

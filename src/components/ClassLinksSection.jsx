@@ -52,6 +52,8 @@ import {
   clearAllDbLinks,
   subscribeToClassLinks,
   mapRowToLink,
+  fetchRemotePasscode,
+  updateRemotePasscode,
 } from '../lib/supabase';
 
 export default function ClassLinksSection({ studentName }) {
@@ -78,6 +80,7 @@ export default function ClassLinksSection({ studentName }) {
   });
 
   const [isLoadingDb, setIsLoadingDb] = useState(isSupabaseConfigured);
+  const [remotePasscode, setRemotePasscode] = useState(null);
 
   // Admin authentication state
   const [isAdmin, setIsAdmin] = useState(() => {
@@ -88,12 +91,20 @@ export default function ClassLinksSection({ studentName }) {
   });
 
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-  const [adminCodeInput, setAdminCodeInput] = useState('');
   const [adminError, setAdminError] = useState('');
   const [isChangingPasscode, setIsChangingPasscode] = useState(false);
   const [newPasscodeInput, setNewPasscodeInput] = useState('');
 
+  // 4-Digit PIN input state & refs
+  const [pinDigits, setPinDigits] = useState(['', '', '', '']);
+  const pin0Ref = useRef(null);
+  const pin1Ref = useRef(null);
+  const pin2Ref = useRef(null);
+  const pin3Ref = useRef(null);
+  const pinInputRefs = [pin0Ref, pin1Ref, pin2Ref, pin3Ref];
+
   const [copiedId, setCopiedId] = useState(null);
+  const [copyAllFeedback, setCopyAllFeedback] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTab, setModalTab] = useState('bulk'); // 'bulk' | 'single'
   const [searchQuery, setSearchQuery] = useState('');
@@ -253,47 +264,158 @@ export default function ClassLinksSection({ studentName }) {
     };
   }, []);
 
-  // Admin Code verification handler
-  const handleAdminLogin = (e) => {
-    if (e) e.preventDefault();
-    if (verifyAdminCode(adminCodeInput)) {
+  // Fetch remote 4-digit passcode on load
+  useEffect(() => {
+    if (isSupabaseConfigured) {
+      fetchRemotePasscode().then((code) => {
+        if (code) setRemotePasscode(code);
+      });
+    }
+  }, []);
+
+  // Auto-focus first PIN digit box when modal opens
+  useEffect(() => {
+    if (isAdminModalOpen) {
+      setPinDigits(['', '', '', '']);
+      setAdminError('');
+      setTimeout(() => {
+        pin0Ref.current?.focus();
+      }, 80);
+    }
+  }, [isAdminModalOpen]);
+
+  // Check 4-digit PIN and unlock
+  const checkAndUnlock = (codeToCheck) => {
+    if (verifyAdminCode(codeToCheck, remotePasscode)) {
       setIsAdmin(true);
       try {
         localStorage.setItem(ADMIN_AUTH_KEY, 'true');
       } catch {}
       setAdminError('');
-      setAdminCodeInput('');
       setIsAdminModalOpen(false);
-      showToast('Admin Mode Unlocked 🔓');
+      setPinDigits(['', '', '', '']);
+      showToast('4-Digit Code Verified! 🔓 You can now paste links.');
+      return true;
     } else {
-      setAdminError('Incorrect admin code. Please check and try again.');
+      setAdminError('Incorrect 4-digit code. Please check and try again.');
+      return false;
     }
   };
 
-  // Admin Lock / Logout handler
+  // Handle individual PIN digit typing
+  const handlePinDigitChange = (index, val) => {
+    const digit = val.replace(/\D/g, '').slice(-1);
+    const next = [...pinDigits];
+    next[index] = digit;
+    setPinDigits(next);
+    if (adminError) setAdminError('');
+
+    if (digit && index < 3) {
+      pinInputRefs[index + 1].current?.focus();
+    }
+
+    if (digit && index === 3 && next.every((d) => d !== '')) {
+      const fullCode = next.join('');
+      setTimeout(() => {
+        const ok = checkAndUnlock(fullCode);
+        if (!ok) {
+          pin3Ref.current?.focus();
+        }
+      }, 60);
+    }
+  };
+
+  // Handle backspace navigation across PIN boxes
+  const handlePinKeyDown = (index, e) => {
+    if (e.key === 'Backspace' && !pinDigits[index] && index > 0) {
+      pinInputRefs[index - 1].current?.focus();
+    }
+  };
+
+  // Handle pasting full 4-digit code directly
+  const handlePinPaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').trim();
+    const digits = pasted.replace(/\D/g, '').slice(0, 4);
+    if (digits.length > 0) {
+      const next = ['', '', '', ''];
+      for (let i = 0; i < digits.length; i++) {
+        next[i] = digits[i];
+      }
+      setPinDigits(next);
+      if (digits.length === 4) {
+        checkAndUnlock(digits);
+      } else {
+        pinInputRefs[Math.min(digits.length, 3)].current?.focus();
+      }
+    }
+  };
+
+  // Manual PIN submit handler
+  const handleAdminLogin = (e) => {
+    if (e) e.preventDefault();
+    const fullCode = pinDigits.join('');
+    if (fullCode.length < 4) {
+      setAdminError('Please enter all 4 digits.');
+      return;
+    }
+    checkAndUnlock(fullCode);
+  };
+
+  // Lock session handler
   const handleAdminLogout = () => {
     setIsAdmin(false);
     try {
       localStorage.removeItem(ADMIN_AUTH_KEY);
     } catch {}
-    showToast('Admin Mode Locked 🔒');
+    showToast('Session Locked 🔒');
   };
 
-  // Change Admin Passcode handler
-  const handleChangePasscode = (e) => {
+  // Change 4-Digit Passcode handler
+  const handleChangePasscode = async (e) => {
     e.preventDefault();
     const trimmed = newPasscodeInput.trim();
-    if (!trimmed || trimmed.length < 4) {
-      setAdminError('New code must be at least 4 characters.');
+    if (!/^\d{4}$/.test(trimmed)) {
+      setAdminError('Code must be exactly 4 numbers (e.g. 2026).');
       return;
     }
     try {
       localStorage.setItem(ADMIN_PASSCODE_KEY, trimmed);
     } catch {}
+    if (isSupabaseConfigured) {
+      await updateRemotePasscode(trimmed);
+    }
+    setRemotePasscode(trimmed);
     setNewPasscodeInput('');
     setIsChangingPasscode(false);
     setAdminError('');
-    showToast('Admin passcode updated successfully! ✓');
+    showToast(`New 4-digit code saved: "${trimmed}". Share it with your team! ✓`);
+  };
+
+  // Copy All Links to clipboard formatted
+  const handleCopyAllLinks = async () => {
+    if (links.length === 0) return;
+    try {
+      const text = [
+        '📚 Classroom Resources & Links:',
+        ...links.map((l, idx) => `${idx + 1}. ${l.title} - ${l.url}${l.description ? ` (${l.description})` : ''}`),
+      ].join('\n');
+
+      await navigator.clipboard.writeText(text);
+      setCopyAllFeedback(true);
+      showToast(`Copied all ${links.length} links to clipboard! Ready to paste.`);
+      setTimeout(() => setCopyAllFeedback(false), 2500);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = links.map((l, idx) => `${idx + 1}. ${l.title} - ${l.url}`).join('\n');
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      setCopyAllFeedback(true);
+      showToast(`Copied all ${links.length} links!`);
+      setTimeout(() => setCopyAllFeedback(false), 2500);
+    }
   };
 
   // Quick Inline Link Drop (Primary Fast Method for Class)
@@ -627,16 +749,16 @@ export default function ClassLinksSection({ studentName }) {
 
               {/* Admin Mode Badge */}
               {isAdmin ? (
-                <div className="admin-status-badge unlocked" title="Instructor Mode is active. You can paste and delete links.">
+                <div className="admin-status-badge unlocked" title="4-Digit Code Unlocked. You can paste and manage links.">
                   <ShieldCheck size={13} className="admin-status-icon" />
-                  <span>Admin Mode Active</span>
+                  <span>Unlocked 🔓</span>
                   <button
                     type="button"
                     onClick={handleAdminLogout}
                     className="admin-badge-lock-btn"
-                    title="Lock admin controls"
+                    title="Lock controls"
                   >
-                    Lock 🔒
+                    Lock
                   </button>
                 </div>
               ) : (
@@ -644,10 +766,10 @@ export default function ClassLinksSection({ studentName }) {
                   type="button"
                   className="admin-status-badge locked"
                   onClick={() => setIsAdminModalOpen(true)}
-                  title="Click to enter admin code and paste links"
+                  title="Click to enter 4-digit code and paste links"
                 >
                   <Lock size={12} />
-                  <span>Instructor Unlock</span>
+                  <span>Enter 4-Digit Code</span>
                 </button>
               )}
             </div>
@@ -664,6 +786,18 @@ export default function ClassLinksSection({ studentName }) {
 
           {/* Quick Header Actions */}
           <div className="class-links-actions">
+            {links.length > 0 && (
+              <button
+                type="button"
+                className="btn-share-bundle"
+                onClick={handleCopyAllLinks}
+                title="Copy all link titles and URLs formatted to clipboard"
+              >
+                <ClipboardCopy size={15} />
+                <span>{copyAllFeedback ? 'Copied All Links! ✓' : 'Copy All Links'}</span>
+              </button>
+            )}
+
             {links.length > 0 && (
               <button
                 type="button"
@@ -694,10 +828,10 @@ export default function ClassLinksSection({ studentName }) {
                 type="button"
                 className="btn-admin-unlock-primary"
                 onClick={() => setIsAdminModalOpen(true)}
-                title="Only instructors with unique code can paste links"
+                title="Enter 4-digit code to paste or bulk manage links"
               >
                 <KeyRound size={15} />
-                <span>Admin Login to Paste</span>
+                <span>Enter 4-Digit Code</span>
               </button>
             )}
           </div>
@@ -741,7 +875,7 @@ export default function ClassLinksSection({ studentName }) {
               </button>
             </form>
             <div className="quick-drop-hint">
-              <span>🛡️ <strong>Admin Active:</strong> Paste any URL and press Enter. Only you can drop links.</span>
+              <span>🛡️ <strong>Unlocked:</strong> Paste any URL and press Enter. You can drop links or bulk import.</span>
               <button
                 type="button"
                 className="btn-hint-change-code"
@@ -750,7 +884,7 @@ export default function ClassLinksSection({ studentName }) {
                   setIsAdminModalOpen(true);
                 }}
               >
-                Change Admin Code
+                Change 4-Digit Code
               </button>
             </div>
           </div>
@@ -954,7 +1088,7 @@ export default function ClassLinksSection({ studentName }) {
                 onClick={() => setIsAdminModalOpen(true)}
               >
                 <KeyRound size={15} style={{ marginRight: '6px' }} />
-                <span>Instructor Login to Paste</span>
+                <span>Enter 4-Digit Code to Paste</span>
               </button>
             ) : (
               <button
@@ -972,7 +1106,7 @@ export default function ClassLinksSection({ studentName }) {
         )}
       </div>
 
-      {/* ADMIN PASSCODE MODAL */}
+      {/* 4-DIGIT PASSCODE MODAL */}
       {isAdminModalOpen && (
         <div className="class-modal-backdrop" onClick={() => setIsAdminModalOpen(false)}>
           <div
@@ -984,14 +1118,14 @@ export default function ClassLinksSection({ studentName }) {
           >
             <div className="class-modal-header">
               <div className="modal-header-text">
-                <div className="class-modal-chip">Admin Security</div>
+                <div className="class-modal-chip">4-Digit Access Code</div>
                 <h3 id="admin-modal-title">
-                  {isChangingPasscode ? 'Update Admin Code' : 'Instructor Admin Verification'}
+                  {isChangingPasscode ? 'Update 4-Digit Code' : 'Enter 4-Digit Passcode'}
                 </h3>
                 <p>
                   {isChangingPasscode
-                    ? 'Set a custom unique code to protect link management.'
-                    : 'Enter the unique admin code to unlock link dropping & management.'}
+                    ? 'Set a custom 4-digit numeric code to share with other users.'
+                    : 'Enter the 4-digit code shared with you to unlock pasting, bulk adding, and managing class links.'}
                 </p>
               </div>
               <button
@@ -1010,33 +1144,49 @@ export default function ClassLinksSection({ studentName }) {
 
             {!isChangingPasscode ? (
               <form onSubmit={handleAdminLogin} className="modal-form">
-                <div className="form-group">
-                  <label htmlFor="admin-passcode-input" className="form-label">
-                    <span>Admin Passcode:</span>
-                    <span className="form-hint">Authorized access only</span>
+                <div className="form-group" style={{ textAlign: 'center' }}>
+                  <label className="form-label" style={{ justifyContent: 'center', marginBottom: '0.5rem' }}>
+                    <span>Enter 4 Digits:</span>
                   </label>
-                  <input
-                    id="admin-passcode-input"
-                    type="password"
-                    autoFocus
-                    placeholder="Enter admin passcode"
-                    value={adminCodeInput}
-                    onChange={(e) => {
-                      setAdminCodeInput(e.target.value);
-                      if (adminError) setAdminError('');
-                    }}
-                    className={`modal-input ${adminError ? 'has-error' : ''}`}
-                  />
-                  {adminError && <div className="admin-error-text">{adminError}</div>}
+
+                  {/* 4 Sleek PIN Boxes with auto-advance and direct paste support */}
+                  <div className="pin-input-container" onPaste={handlePinPaste}>
+                    {[0, 1, 2, 3].map((idx) => (
+                      <input
+                        key={idx}
+                        ref={pinInputRefs[idx]}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={1}
+                        value={pinDigits[idx]}
+                        onChange={(e) => handlePinDigitChange(idx, e.target.value)}
+                        onKeyDown={(e) => handlePinKeyDown(idx, e)}
+                        className={`pin-digit-input ${adminError ? 'has-error' : ''}`}
+                        autoComplete="off"
+                        aria-label={`PIN Digit ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  {adminError && (
+                    <div className="admin-error-text" style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+                      {adminError}
+                    </div>
+                  )}
+
+                  <div style={{ fontSize: '0.8125rem', color: 'var(--color-text-tertiary)', marginTop: '0.75rem' }}>
+                    Tip: You can also copy & paste the 4-digit code directly into the boxes
+                  </div>
                 </div>
 
                 <div className="modal-footer" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--color-text-tertiary)' }}>
-                    Protected for instructors only
+                    Shared access code
                   </span>
-                  <button type="submit" className="btn-modal-primary">
+                  <button type="submit" className="btn-modal-primary" disabled={pinDigits.join('').length < 4}>
                     <Unlock size={16} />
-                    <span>Unlock Admin Mode</span>
+                    <span>Unlock with Code</span>
                   </button>
                 </div>
               </form>
@@ -1044,17 +1194,21 @@ export default function ClassLinksSection({ studentName }) {
               <form onSubmit={handleChangePasscode} className="modal-form">
                 <div className="form-group">
                   <label htmlFor="new-admin-code-input" className="form-label">
-                    <span>New Admin Passcode:</span>
-                    <span className="form-hint">Minimum 4 characters</span>
+                    <span>New 4-Digit Passcode:</span>
+                    <span className="form-hint">Exactly 4 numbers (e.g. 2026)</span>
                   </label>
                   <input
                     id="new-admin-code-input"
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={4}
                     autoFocus
-                    placeholder="Enter new custom code"
+                    placeholder="e.g. 2026"
                     value={newPasscodeInput}
-                    onChange={(e) => setNewPasscodeInput(e.target.value)}
+                    onChange={(e) => setNewPasscodeInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
                     className="modal-input"
+                    style={{ fontSize: '1.25rem', letterSpacing: '0.25rem', textAlign: 'center', fontWeight: 700 }}
                   />
                   {adminError && <div className="admin-error-text">{adminError}</div>}
                 </div>
@@ -1070,8 +1224,8 @@ export default function ClassLinksSection({ studentName }) {
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn-modal-primary" disabled={newPasscodeInput.trim().length < 4}>
-                    <span>Save New Code</span>
+                  <button type="submit" className="btn-modal-primary" disabled={newPasscodeInput.trim().length !== 4}>
+                    <span>Save 4-Digit Code</span>
                   </button>
                 </div>
               </form>

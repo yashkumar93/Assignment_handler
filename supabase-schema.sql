@@ -47,3 +47,22 @@ CREATE POLICY "Allow public delete access"
 
 -- 4. Enable Realtime broadcast on this table so student screens update instantly!
 ALTER PUBLICATION supabase_realtime ADD TABLE public.class_links;
+
+-- 5. Config table for shared 4-digit access code (default '2026')
+CREATE TABLE IF NOT EXISTS public.app_config (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+ALTER TABLE public.app_config ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read app_config"
+  ON public.app_config FOR SELECT TO public USING (true);
+
+CREATE POLICY "Allow public write app_config"
+  ON public.app_config FOR ALL TO public USING (true) WITH CHECK (true);
+
+INSERT INTO public.app_config (key, value)
+VALUES ('admin_passcode', '2026')
+ON CONFLICT (key) DO NOTHING;
+
