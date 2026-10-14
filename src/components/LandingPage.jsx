@@ -1,7 +1,6 @@
 import React from 'react';
 import SkipperCanvas from './SkipperCanvas';
 import BrandLogo from './BrandLogo';
-import ClassLinksSection from './ClassLinksSection';
 
 export default function LandingPage({ onSelectTrack, studentName }) {
   return (
@@ -25,7 +24,7 @@ export default function LandingPage({ onSelectTrack, studentName }) {
         </div>
       </header>
 
-      {/* Main Track Selection & Class Links Section */}
+      {/* Main Track Selection */}
       <main className="landing-buttons-wrapper">
         <div className="landing-buttons-group">
           {/* Button 1: HTML & CSS */}
@@ -62,9 +61,6 @@ export default function LandingPage({ onSelectTrack, studentName }) {
             <span className="track-btn-arrow" aria-hidden="true">→</span>
           </button>
         </div>
-
-        {/* Live Classroom Links & Resources Hub */}
-        <ClassLinksSection studentName={studentName} />
       </main>
 
       {/* Footer */}
