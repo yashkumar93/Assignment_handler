@@ -3,7 +3,7 @@ import BrandLogo from './BrandLogo';
 import { ProgressiveBlur } from './ui/skiper-ui/skiper41';
 import { ThemeToggleButton } from './ui/skiper-ui/skiper26';
 
-export default function Navbar({ onBackToHome, onBackToAssignment, view, studentName, theme, onToggleTheme }) {
+export default function Navbar({ onBackToHome, onBackToAssignment, view, track, studentName, theme, onToggleTheme }) {
   return (
     <nav className="nav" role="navigation" aria-label="Main navigation">
       {/* Progressive Blur Transition Bar */}
@@ -28,19 +28,19 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, student
               onBackToHome();
             }
           }}
-          aria-label="HTML & CSS Portfolio Assignment"
+          aria-label="Assignment Portal"
         >
           <BrandLogo size={26} />
           <span style={{ fontWeight: 700 }}>
-            {view === 'genai' ? 'Generative AI' : 'HTML & CSS'}
+            {view === 'genai' || track === 'genai' ? 'Generative AI' : 'HTML & CSS'}
           </span>
           <span className="pill" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
             {view === 'genai'
               ? 'Project Track'
               : view === 'github-guide'
-              ? 'Portfolio 101'
+              ? (track === 'genai' ? 'Gen AI Guide' : 'Portfolio 101')
               : view === 'pdf-guide'
-              ? 'PDF Guide'
+              ? (track === 'genai' ? 'Gen AI PDF Guide' : 'PDF Guide')
               : 'Portfolio Track'}
           </span>
         </a>
@@ -72,7 +72,7 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, student
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
-              <span>Assignment</span>
+              <span>{track === 'genai' ? 'Gen AI Project' : 'Assignment'}</span>
             </button>
           )}
         </div>

@@ -26,6 +26,7 @@ export const NIAT_CLASS_LINKS_STORAGE_KEY = 'niat_class_links';
 export const DEFAULT_ADMIN_CODE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_ADMIN_PASSCODE) || '2026';
 export const ADMIN_AUTH_KEY = 'niat_admin_unlocked';
 export const ADMIN_PASSCODE_KEY = 'niat_admin_passcode';
+export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
 
 /**
  * Default links list: Pre-seeded with official assessment submission forms.

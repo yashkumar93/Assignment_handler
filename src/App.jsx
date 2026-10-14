@@ -198,6 +198,7 @@ export default function App() {
             onBackToHome={handleBackToLanding}
             onBackToAssignment={handleBackToAssignment}
             view="github-guide"
+            track={guideReturnTrack}
             studentName={studentName}
             theme={theme}
             onToggleTheme={toggleTheme}
@@ -207,6 +208,7 @@ export default function App() {
               <GitHubGuide
                 onBackToAssignment={handleBackToAssignment}
                 studentName={studentName}
+                initialTrack={guideReturnTrack}
               />
             </Suspense>
           </main>
@@ -221,6 +223,7 @@ export default function App() {
             onBackToHome={handleBackToLanding}
             onBackToAssignment={handleBackToAssignment}
             view="pdf-guide"
+            track={guideReturnTrack}
             studentName={studentName}
             theme={theme}
             onToggleTheme={toggleTheme}
@@ -230,6 +233,7 @@ export default function App() {
               <ScreenshotGuide
                 onBackToAssignment={handleBackToAssignment}
                 studentName={studentName}
+                track={guideReturnTrack}
               />
             </Suspense>
           </main>
