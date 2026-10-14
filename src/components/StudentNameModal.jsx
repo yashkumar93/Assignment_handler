@@ -4,6 +4,7 @@ import { GENAI_PROJECTS } from '../data/genAiProjects';
 export default function StudentNameModal({
   isOpen,
   onSubmit,
+  onClose,
 }) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
@@ -44,6 +45,14 @@ export default function StudentNameModal({
     onSubmit(studentName);
   };
 
+  const handleSkipOrGuest = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      onSubmit('Guest');
+    }
+  };
+
   const handleKeyDown = (e) => {
     if (!showDropdown || suggestions.length === 0) return;
 
@@ -60,6 +69,7 @@ export default function StudentNameModal({
       }
     } else if (e.key === 'Escape') {
       setShowDropdown(false);
+      if (onClose) onClose();
     }
   };
 
@@ -84,10 +94,28 @@ export default function StudentNameModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="name-modal-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget && onClose) {
+          onClose();
+        }
+      }}
     >
       <div className="name-modal-card">
+        {onClose && (
+          <button
+            type="button"
+            className="name-modal-close-btn"
+            onClick={onClose}
+            aria-label="Close modal and explore portal"
+            title="Close and explore portal"
+            style={{ fontSize: '0.8125rem', width: 'auto', padding: '4px 10px' }}
+          >
+            Close
+          </button>
+        )}
+
         <div className="name-modal-badge">
-          <span>✨ Welcome to the Assignment Portal</span>
+          <span>Welcome to the Assignment Portal</span>
         </div>
 
         <h2 id="name-modal-title" className="name-modal-title">
@@ -156,7 +184,7 @@ export default function StudentNameModal({
                   }}
                   aria-label="Clear name input"
                 >
-                  ✕
+                  Clear
                 </button>
               )}
             </div>
@@ -201,18 +229,36 @@ export default function StudentNameModal({
               <span className="name-field-error" role="alert">{error}</span>
             ) : (
               <span className="name-field-hint">
-                💡 Start typing to pick your name directly from the class list.
+                Start typing to select your name from the class roster.
               </span>
             )}
           </div>
 
-          <div className="name-modal-actions">
+          <div className="name-modal-actions" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button
               type="submit"
               className="btn btn-primary name-submit-btn"
               disabled={!name.trim()}
+              style={{ flex: '1 1 auto' }}
             >
-              <span>Continue & Open Portal →</span>
+              <span>Continue & Open Portal</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary name-skip-btn"
+              onClick={handleSkipOrGuest}
+              style={{
+                flex: '0 0 auto',
+                background: 'var(--color-bg-surface-alt)',
+                border: '1px solid var(--color-border-default)',
+                color: 'var(--color-text-secondary)',
+                fontSize: '0.875rem',
+                padding: '0.625rem 1rem',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              Skip & Explore
             </button>
           </div>
         </form>

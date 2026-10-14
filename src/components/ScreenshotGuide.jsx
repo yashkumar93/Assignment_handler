@@ -3,12 +3,12 @@ import { getGenAiProjectForStudent, GENAI_PROJECTS } from '../data/genAiProjects
 import { GENAI_SUBMISSION_FORM_URL } from '../data/classLinks';
 
 const CATEGORY_COLORS = {
-  'AI-Powered': { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA', icon: '🤖' },
-  'Business & Commerce': { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)', text: '#34D399', icon: '💼' },
-  'Data & Dashboards': { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)', text: '#60A5FA', icon: '📊' },
-  'Social & Community': { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)', text: '#FBBF24', icon: '🤝' },
-  'Student & Campus': { bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.3)', text: '#F472B6', icon: '🎓' },
-  'Creative & Interactive': { bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)', text: '#C084FC', icon: '🎨' },
+  'AI-Powered': { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA' },
+  'Business & Commerce': { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)', text: '#34D399' },
+  'Data & Dashboards': { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)', text: '#60A5FA' },
+  'Social & Community': { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)', text: '#FBBF24' },
+  'Student & Campus': { bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.3)', text: '#F472B6' },
+  'Creative & Interactive': { bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)', text: '#C084FC' },
 };
 
 export default function ScreenshotGuide({
@@ -69,7 +69,7 @@ export default function ScreenshotGuide({
 
   const categoryStyle = project && CATEGORY_COLORS[project.category]
     ? CATEGORY_COLORS[project.category]
-    : { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA', icon: '🤖' };
+    : { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA' };
 
   // Checklist state per track
   const storageKey = isGenAi ? 'niat_genai_pdf_checklist' : 'niat_pdf_checklist';
@@ -208,7 +208,6 @@ export default function ScreenshotGuide({
               className={`guide-track-switcher-btn ${isGenAi ? 'active' : ''}`}
               onClick={() => setActiveTrack('genai')}
             >
-              <span style={{ fontSize: '1.1rem' }}>🤖</span>
               <span>Generative AI Project</span>
               {project && (
                 <span className="guide-track-badge-mini">
@@ -221,7 +220,6 @@ export default function ScreenshotGuide({
               className={`guide-track-switcher-btn ${!isGenAi ? 'active' : ''}`}
               onClick={() => setActiveTrack('assignment')}
             >
-              <span style={{ fontSize: '1.1rem' }}>🌐</span>
               <span>HTML &amp; CSS Portfolio</span>
             </button>
           </div>
@@ -261,7 +259,6 @@ export default function ScreenshotGuide({
                     color: categoryStyle.text,
                   }}
                 >
-                  <span className="category-icon">{categoryStyle.icon}</span>
                   <span>{project.category}</span>
                 </span>
                 <span className="genai-project-id-pill">
@@ -436,7 +433,6 @@ export default function ScreenshotGuide({
                   )}
                 </p>
                 <div className="tip-callout" style={{ marginTop: '0.75rem' }}>
-                  <span style={{ fontSize: '1rem' }}>💡</span>
                   <div>
                     <strong>Pro tip:</strong>{' '}
                     {isGenAi
@@ -566,7 +562,7 @@ export default function ScreenshotGuide({
                       onClick={copyFormLink}
                       className="btn btn-secondary btn-sm"
                     >
-                      {copiedFormUrl ? '✓ Form URL Copied!' : 'Copy Form URL'}
+                      {copiedFormUrl ? 'Form URL Copied' : 'Copy Form URL'}
                     </button>
                   )}
                 </div>
@@ -613,9 +609,8 @@ export default function ScreenshotGuide({
           {/* Celebration Banner */}
           {totalChecked === 5 && (
             <div className="checklist-celebration-banner">
-              <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>🎉</span>
               <div>
-                <strong>PDF is ready for submission!</strong>
+                <strong>PDF is ready for submission</strong>
                 <span>
                   {isGenAi
                     ? `All 5 quality checks verified. Your ${project?.title} full-page capture is complete, sharp, and properly formatted for evaluation.`
@@ -690,7 +685,6 @@ export default function ScreenshotGuide({
           </div>
 
           <div className="instructor-callout" style={{ marginTop: '2rem' }}>
-            <span style={{ fontSize: '1.25rem' }}>💬</span>
             <div>
               <strong>Questions or blockers?</strong> Reach out to your instructors in the course chat before the submission deadline.
             </div>
@@ -744,7 +738,7 @@ export default function ScreenshotGuide({
                 onClick={() => setShowRosterPicker(false)}
                 aria-label="Close project picker"
               >
-                ✕
+                Close
               </button>
             </div>
 

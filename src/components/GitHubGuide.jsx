@@ -3,12 +3,12 @@ import { getGenAiProjectForStudent, GENAI_PROJECTS } from '../data/genAiProjects
 import { GENAI_SUBMISSION_FORM_URL } from '../data/classLinks';
 
 const CATEGORY_COLORS = {
-  'AI-Powered': { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA', icon: '🤖' },
-  'Business & Commerce': { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)', text: '#34D399', icon: '💼' },
-  'Data & Dashboards': { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)', text: '#60A5FA', icon: '📊' },
-  'Social & Community': { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)', text: '#FBBF24', icon: '🤝' },
-  'Student & Campus': { bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.3)', text: '#F472B6', icon: '🎓' },
-  'Creative & Interactive': { bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)', text: '#C084FC', icon: '🎨' },
+  'AI-Powered': { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA' },
+  'Business & Commerce': { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)', text: '#34D399' },
+  'Data & Dashboards': { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)', text: '#60A5FA' },
+  'Social & Community': { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)', text: '#FBBF24' },
+  'Student & Campus': { bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.3)', text: '#F472B6' },
+  'Creative & Interactive': { bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)', text: '#C084FC' },
 };
 
 export default function GitHubGuide({
@@ -78,7 +78,7 @@ export default function GitHubGuide({
 
   const categoryStyle = project && CATEGORY_COLORS[project.category]
     ? CATEGORY_COLORS[project.category]
-    : { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA', icon: '🤖' };
+    : { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA' };
 
   // Checklist configuration per track
   const storageKey = isGenAi ? 'niat_genai_github_checklist' : 'niat_github_checklist';
@@ -166,22 +166,22 @@ export default function GitHubGuide({
 **Submission Form:** ${GENAI_SUBMISSION_FORM_URL}
 
 ---
-
-## 📖 Project Overview
+ 
+## Project Overview
 ${project?.description || 'A modern generative AI web application.'}
 
-## 🎯 Implemented Must-Haves
+## Implemented Must-Haves
 ${(project?.mustHavesList || []).map((m) => `- [x] ${m}`).join('\n')}
 
-## 🧠 Key Learning Outcomes
+## Key Learning Outcomes
 ${(project?.learningOutcomesList || []).map((l) => `- ${l}`).join('\n')}
 
-## 🛠 Tech Stack
+## Tech Stack
 - **Frontend:** HTML5, CSS3, JavaScript (or React / Vite / Next.js)
 - **AI & Logic:** Generative AI prompt engineering, external APIs, state management
 - **Deployment:** Vercel / Netlify / GitHub Pages (Deploy anywhere with zero restrictions!)
 
-## 🚀 How to Run Locally
+## How to Run Locally
 1. Clone this repository:
    \`\`\`bash
    git clone https://github.com/YOUR-USERNAME/${genAiProjectSlug}.git
@@ -197,10 +197,10 @@ ${(project?.learningOutcomesList || []).map((l) => `- ${l}`).join('\n')}
    npm run dev
    \`\`\`
 
-## 📸 Demo Preview Screenshot
+## Demo Preview Screenshot
 ![Project Preview Screenshot](assets/screenshot.png)
 
-## 👤 Author
+## Author
 - **${displayName}**
 - Student #${project?.sno || 1} · Project #${project?.projectNo || 1}`;
 
@@ -309,7 +309,6 @@ Write 2 or 3 lines in your own words.`;
               className={`guide-track-switcher-btn ${isGenAi ? 'active' : ''}`}
               onClick={() => setActiveTrack('genai')}
             >
-              <span style={{ fontSize: '1.1rem' }}>🤖</span>
               <span>Generative AI Project</span>
               {project && (
                 <span className="guide-track-badge-mini">
@@ -322,7 +321,6 @@ Write 2 or 3 lines in your own words.`;
               className={`guide-track-switcher-btn ${!isGenAi ? 'active' : ''}`}
               onClick={() => setActiveTrack('assignment')}
             >
-              <span style={{ fontSize: '1.1rem' }}>🌐</span>
               <span>HTML & CSS Portfolio</span>
             </button>
           </div>
@@ -809,8 +807,7 @@ Write 2 or 3 lines in your own words.`;
           <div className="commit-comparison-grid">
             <div className="commit-col good">
               <div className="commit-col-header">
-                <span className="commit-icon check">✓</span>
-                <strong>Good Commit Messages ({isGenAi ? 'Gen AI Project' : 'Portfolio'})</strong>
+                <strong>Recommended Commit Messages ({isGenAi ? 'Gen AI Project' : 'Portfolio'})</strong>
               </div>
               <ul className="commit-list">
                 {isGenAi ? (
@@ -834,7 +831,6 @@ Write 2 or 3 lines in your own words.`;
 
             <div className="commit-col bad">
               <div className="commit-col-header">
-                <span className="commit-icon cross">✕</span>
                 <strong>Avoid Meaningless Messages</strong>
               </div>
               <ul className="commit-list">
@@ -904,7 +900,7 @@ Write 2 or 3 lines in your own words.`;
               </p>
             </div>
             <div className={`pill ${totalChecked === 7 ? 'complete' : ''}`} style={{ fontWeight: 700, borderColor: totalChecked === 7 ? '#10B981' : undefined, color: totalChecked === 7 ? '#10B981' : undefined }}>
-              {totalChecked === 7 ? '✓ 7 / 7 Complete' : `${totalChecked} / 7 Completed`}
+              {totalChecked === 7 ? '7 / 7 Complete' : `${totalChecked} / 7 Completed`}
             </div>
           </div>
 
@@ -940,9 +936,8 @@ Write 2 or 3 lines in your own words.`;
           {/* Celebration Banner */}
           {totalChecked === 7 && (
             <div className="checklist-celebration-banner">
-              <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>🎉</span>
               <div>
-                <strong>All 7 requirements met!</strong>
+                <strong>All 7 requirements met</strong>
                 <span>
                   {isGenAi
                     ? `Your ${project?.title} repository is verified and ready for official Gen AI assessment grading.`
@@ -972,7 +967,6 @@ Write 2 or 3 lines in your own words.`;
           {isGenAi && (
             <div className="genai-guide-submit-box" style={{ marginTop: '2rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '1.25rem' }}>📋</span>
                 <div style={{ flex: 1, minWidth: '220px' }}>
                   <strong style={{ display: 'block', fontSize: '0.95rem' }}>Submit Your Project Response</strong>
                   <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>
@@ -985,7 +979,7 @@ Write 2 or 3 lines in your own words.`;
                     onClick={copyFormLink}
                     className="btn btn-secondary btn-sm"
                   >
-                    {copiedFormUrl ? '✓ Link Copied!' : 'Copy Form URL'}
+                    {copiedFormUrl ? 'Link Copied' : 'Copy Form URL'}
                   </button>
                   <a
                     href={GENAI_SUBMISSION_FORM_URL}
@@ -994,10 +988,6 @@ Write 2 or 3 lines in your own words.`;
                     className="btn btn-primary btn-sm"
                   >
                     <span>Open Submission Form</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="7" y1="17" x2="17" y2="7"></line>
-                      <polyline points="7 7 17 7 17 17"></polyline>
-                    </svg>
                   </a>
                 </div>
               </div>
@@ -1078,7 +1068,6 @@ Write 2 or 3 lines in your own words.`;
           </div>
 
           <div className="instructor-callout" style={{ marginTop: '2rem' }}>
-            <span style={{ fontSize: '1.25rem' }}>💬</span>
             <div>
               <strong>Questions or blockers?</strong> Ask your instructors in the course chat before the deadline.
             </div>
@@ -1132,7 +1121,7 @@ Write 2 or 3 lines in your own words.`;
                 onClick={() => setShowRosterPicker(false)}
                 aria-label="Close project picker"
               >
-                ✕
+                Close
               </button>
             </div>
 

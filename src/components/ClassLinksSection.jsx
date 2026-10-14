@@ -186,7 +186,7 @@ export default function ClassLinksSection({ studentName }) {
             } catch {}
             return updated;
           });
-          showToast(`⚡ Live Drop: "${newLink.title}"`);
+          showToast(`Live Drop: "${newLink.title}"`);
         }
       } else if (payload.eventType === 'UPDATE') {
         const updatedLink = mapRowToLink(payload.new);
@@ -294,7 +294,7 @@ export default function ClassLinksSection({ studentName }) {
       setAdminError('');
       setIsAdminModalOpen(false);
       setPinDigits(['', '', '', '']);
-      showToast('4-Digit Code Verified! 🔓 You can now paste links.');
+      showToast('4-Digit Code Verified. You can now paste links.');
       return true;
     } else {
       setAdminError('Incorrect 4-digit code. Please check and try again.');
@@ -368,7 +368,7 @@ export default function ClassLinksSection({ studentName }) {
     try {
       localStorage.removeItem(ADMIN_AUTH_KEY);
     } catch {}
-    showToast('Session Locked 🔒');
+    showToast('Session Locked');
   };
 
   // Change 4-Digit Passcode handler
@@ -376,7 +376,7 @@ export default function ClassLinksSection({ studentName }) {
     e.preventDefault();
     const trimmed = newPasscodeInput.trim();
     if (!/^\d{4}$/.test(trimmed)) {
-      setAdminError('Code must be exactly 4 numbers (e.g. 2026).');
+      setAdminError('Passcode must be exactly 4 digits.');
       return;
     }
     try {
@@ -389,7 +389,7 @@ export default function ClassLinksSection({ studentName }) {
     setNewPasscodeInput('');
     setIsChangingPasscode(false);
     setAdminError('');
-    showToast(`New 4-digit code saved: "${trimmed}". Share it with your team! ✓`);
+    showToast(`New 4-digit code saved: "${trimmed}".`);
   };
 
   // Copy All Links to clipboard formatted
@@ -397,7 +397,7 @@ export default function ClassLinksSection({ studentName }) {
     if (links.length === 0) return;
     try {
       const text = [
-        '📚 Classroom Resources & Links:',
+        'Classroom Resources & Links:',
         ...links.map((l, idx) => `${idx + 1}. ${l.title} - ${l.url}${l.description ? ` (${l.description})` : ''}`),
       ].join('\n');
 
@@ -751,7 +751,7 @@ export default function ClassLinksSection({ studentName }) {
               {isAdmin ? (
                 <div className="admin-status-badge unlocked" title="4-Digit Code Unlocked. You can paste and manage links.">
                   <ShieldCheck size={13} className="admin-status-icon" />
-                  <span>Unlocked 🔓</span>
+                  <span>Unlocked</span>
                   <button
                     type="button"
                     onClick={handleAdminLogout}
@@ -794,7 +794,7 @@ export default function ClassLinksSection({ studentName }) {
                 title="Copy all link titles and URLs formatted to clipboard"
               >
                 <ClipboardCopy size={15} />
-                <span>{copyAllFeedback ? 'Copied All Links! ✓' : 'Copy All Links'}</span>
+                <span>{copyAllFeedback ? 'Copied All Links' : 'Copy All Links'}</span>
               </button>
             )}
 
@@ -806,7 +806,7 @@ export default function ClassLinksSection({ studentName }) {
                 title="Copy a single link containing all current resources to share with students"
               >
                 <Share2 size={15} />
-                <span>{shareFeedback ? 'Copied Student URL! ✓' : 'Share Links URL'}</span>
+                <span>{shareFeedback ? 'Copied Student URL' : 'Share Links URL'}</span>
               </button>
             )}
 
@@ -875,7 +875,7 @@ export default function ClassLinksSection({ studentName }) {
               </button>
             </form>
             <div className="quick-drop-hint">
-              <span>🛡️ <strong>Unlocked:</strong> Paste any URL and press Enter. You can drop links or bulk import.</span>
+              <span><strong>Unlocked:</strong> Paste any URL and press Enter. You can drop links or bulk import.</span>
               <button
                 type="button"
                 className="btn-hint-change-code"
@@ -1195,7 +1195,7 @@ export default function ClassLinksSection({ studentName }) {
                 <div className="form-group">
                   <label htmlFor="new-admin-code-input" className="form-label">
                     <span>New 4-Digit Passcode:</span>
-                    <span className="form-hint">Exactly 4 numbers (e.g. 2026)</span>
+                    <span className="form-hint">Exactly 4 digits</span>
                   </label>
                   <input
                     id="new-admin-code-input"
@@ -1204,7 +1204,7 @@ export default function ClassLinksSection({ studentName }) {
                     pattern="[0-9]*"
                     maxLength={4}
                     autoFocus
-                    placeholder="e.g. 2026"
+                    placeholder="••••"
                     value={newPasscodeInput}
                     onChange={(e) => setNewPasscodeInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
                     className="modal-input"
@@ -1468,7 +1468,7 @@ export default function ClassLinksSection({ studentName }) {
                   title="Copy ready-to-paste code for classLinks.js"
                 >
                   <ClipboardCopy size={13} />
-                  <span>{exportNotice ? 'Copied to Clipboard! ✓' : 'Copy JS for classLinks.js'}</span>
+                  <span>{exportNotice ? 'Copied to Clipboard' : 'Copy JS for classLinks.js'}</span>
                 </button>
                 <button
                   type="button"

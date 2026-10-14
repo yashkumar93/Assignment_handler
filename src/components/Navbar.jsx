@@ -3,7 +3,7 @@ import BrandLogo from './BrandLogo';
 import { ProgressiveBlur } from './ui/skiper-ui/skiper41';
 import { ThemeToggleButton } from './ui/skiper-ui/skiper26';
 
-export default function Navbar({ onBackToHome, onBackToAssignment, view, track, studentName, theme, onToggleTheme }) {
+export default function Navbar({ onBackToHome, onBackToAssignment, view, track, studentName, theme, onToggleTheme, onOpenClipboard }) {
   return (
     <nav className="nav" role="navigation" aria-label="Main navigation">
       {/* Progressive Blur Transition Bar */}
@@ -53,12 +53,63 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, track, 
             </div>
           )}
 
+          {onOpenClipboard && (
+            <button
+              className="landing-clipboard-nav-btn navbar-clipboard-btn"
+              onClick={onOpenClipboard}
+              type="button"
+              aria-label="Open Online Clipboard"
+              title="Open Live Online Clipboard"
+              style={{ padding: '6px 12px', fontSize: '0.8125rem' }}
+            >
+              <div className="landing-clipboard-nav-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                <span className="landing-clipboard-nav-ping" />
+              </div>
+              <span className="landing-clipboard-nav-label">Clipboard</span>
+            </button>
+          )}
+
           {/* Progressive Blur Theme Toggle Button */}
           <ThemeToggleButton
             theme={theme}
             onToggleTheme={onToggleTheme}
             className="navbar-theme-toggle"
           />
+
+          {/* Direct Return to Landing Page button */}
+          {onBackToHome && (
+            <button
+              className="btn-icon nav-home-btn"
+              onClick={onBackToHome}
+              type="button"
+              aria-label="Return to Landing Page"
+              title="Return to Landing Page"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '6px 12px',
+                fontSize: '0.8125rem',
+                fontWeight: 600,
+                color: 'var(--color-text-secondary)',
+                borderRadius: '8px',
+                border: '1px solid var(--color-border-subtle)',
+                background: 'var(--color-bg-surface)',
+                cursor: 'pointer'
+              }}
+              id="navbar-btn-home"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span>Home</span>
+            </button>
+          )}
 
           {onBackToAssignment && (
             <button

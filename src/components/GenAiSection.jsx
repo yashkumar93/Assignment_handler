@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { GENAI_PROJECTS, getGenAiProjectForStudent, ALL_STUDENT_NAMES } from '../data/genAiProjects';
 
 const CATEGORY_COLORS = {
-  'AI-Powered': { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA', icon: '🤖' },
-  'Business & Commerce': { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)', text: '#34D399', icon: '💼' },
-  'Data & Dashboards': { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)', text: '#60A5FA', icon: '📊' },
-  'Social & Community': { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)', text: '#FBBF24', icon: '🤝' },
-  'Student & Campus': { bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.3)', text: '#F472B6', icon: '🎓' },
-  'Creative & Interactive': { bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)', text: '#C084FC', icon: '🎨' },
+  'AI-Powered': { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA' },
+  'Business & Commerce': { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)', text: '#34D399' },
+  'Data & Dashboards': { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)', text: '#60A5FA' },
+  'Social & Community': { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)', text: '#FBBF24' },
+  'Student & Campus': { bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.3)', text: '#F472B6' },
+  'Creative & Interactive': { bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)', text: '#C084FC' },
 };
 
 export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
@@ -91,7 +91,7 @@ export default function GenAiSection({
 
   const categoryStyle = project && CATEGORY_COLORS[project.category]
     ? CATEGORY_COLORS[project.category]
-    : { bg: 'var(--color-accent-subtle)', border: 'var(--color-accent-border)', text: 'var(--color-accent-text)', icon: '✨' };
+    : { bg: 'var(--color-accent-subtle)', border: 'var(--color-accent-border)', text: 'var(--color-accent-text)' };
 
   // Checklist completion stats
   const mustHavesList = project ? project.mustHavesList : [];
@@ -148,7 +148,6 @@ export default function GenAiSection({
               title="Jump to requirements guide"
             >
               <span>Requirements</span>
-              <span aria-hidden="true">↓</span>
             </a>
 
             <a
@@ -164,7 +163,6 @@ export default function GenAiSection({
               title="Jump to submission form"
             >
               <span>Submit Form</span>
-              <span aria-hidden="true">↓</span>
             </a>
 
             <button
@@ -173,11 +171,10 @@ export default function GenAiSection({
               onClick={() => setShowRosterModal(true)}
               title="Click to switch student"
             >
-              <span className="genai-student-icon">👤</span>
               <span className="genai-student-name-text">
                 {studentName || 'Select Student'}
               </span>
-              <span className="genai-switch-tag">Switch ▾</span>
+              <span className="genai-switch-tag">Switch</span>
             </button>
           </div>
         </div>
@@ -186,7 +183,7 @@ export default function GenAiSection({
         {!project ? (
           <div className="genai-card genai-not-found-card">
             <div className="genai-card-badge" style={{ background: 'rgba(239, 68, 68, 0.12)', color: '#EF4444', borderColor: 'rgba(239, 68, 68, 0.3)' }}>
-              ⚠️ Allocation Not Found
+              Allocation Not Found
             </div>
             <h2 className="genai-not-found-title">
               No assignment found for "{studentName || 'Anonymous'}"
@@ -208,11 +205,6 @@ export default function GenAiSection({
                 style={{ fontSize: '0.875rem', padding: '8px 16px', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
               >
                 <span>Open Submission Form</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
               </a>
             </div>
 
@@ -267,7 +259,6 @@ export default function GenAiSection({
                     color: categoryStyle.text,
                   }}
                 >
-                  <span className="category-icon">{categoryStyle.icon}</span>
                   <span>{project.category}</span>
                 </span>
 
@@ -276,7 +267,7 @@ export default function GenAiSection({
                 </span>
 
                 <span className={`genai-difficulty-pill ${project.difficulty.includes('Advanced') ? 'is-advanced' : 'is-standard'}`}>
-                  {project.difficulty.includes('Advanced') ? '⚡ Advanced: External API / Real-time' : 'Standard Complexity'}
+                  {project.difficulty.includes('Advanced') ? 'Advanced: External API / Real-time' : 'Standard Complexity'}
                 </span>
 
                 <span className="genai-roll-pill">
@@ -341,7 +332,7 @@ export default function GenAiSection({
                   <ul className="genai-outcomes-list">
                     {project.learningOutcomesList.map((outcome, idx) => (
                       <li key={idx} className="genai-outcome-item">
-                        <span className="genai-outcome-bullet" aria-hidden="true">🎯</span>
+                        <span className="genai-outcome-bullet" aria-hidden="true">•</span>
                         <span>{outcome}</span>
                       </li>
                     ))}
@@ -354,12 +345,6 @@ export default function GenAiSection({
             <div className="genai-card genai-features-card">
               <div className="genai-card-header" style={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div className="genai-card-icon-box" style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#10B981' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="9 11 12 14 22 4"></polyline>
-                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                    </svg>
-                  </div>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <h2 className="genai-card-title">Project-Specific Must-Have Features</h2>
@@ -422,7 +407,7 @@ export default function GenAiSection({
                 </div>
 
                 <div className="genai-checklist-tip">
-                  💡 <strong>Tip:</strong> Click each item as you build it to track your completion status. Progress is automatically saved in your browser.
+                  <strong>Tip:</strong> Click each item as you build it to track your completion status. Progress is automatically saved in your browser.
                 </div>
               </div>
             </div>
@@ -431,7 +416,7 @@ export default function GenAiSection({
             <section id="genai-requirements" className="genai-reqs-section">
               <div className="genai-reqs-header">
                 <div className="pill" style={{ marginBottom: '0.75rem', width: 'fit-content' }}>
-                  <span>📋 Mandatory Project Deliverables Guide</span>
+                  <span>Mandatory Project Deliverables Guide</span>
                 </div>
                 <h2 className="genai-reqs-title">
                   Submission Requirements Guide
@@ -447,18 +432,11 @@ export default function GenAiSection({
                   <div className="genai-req-top">
                     <span className="genai-step-pill">STEP 01</span>
                     <span className="genai-status-badge badge-deployment">
-                      ✓ Deploy Anywhere
+                      Deploy Anywhere
                     </span>
                   </div>
 
                   <div className="genai-req-title-wrap">
-                    <div className="genai-req-icon-box icon-deployment">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                      </svg>
-                    </div>
                     <div>
                       <h3 className="genai-req-name">Live Deployment</h3>
                       <span className="genai-req-sub">Zero Platform Limitations</span>
@@ -477,28 +455,19 @@ export default function GenAiSection({
 
                   <ul className="genai-req-points">
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
                       <span>Deploy anywhere: Vercel, Netlify, Render, Pages, etc.</span>
                     </li>
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      <span>Must be live & browseable (no localhost or private links)</span>
+                      <span>Must be live &amp; browseable (no localhost or private links)</span>
                     </li>
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
                       <span>Ensure all must-have features can be clicked and tested</span>
                     </li>
                   </ul>
 
                   <div className="genai-req-footer">
                     <span className="genai-req-footer-tip">
-                      💡 <strong>Rule:</strong> No platform lock-in. Any working public host is valid.
+                      <strong>Rule:</strong> No platform lock-in. Any working public host is valid.
                     </span>
                   </div>
                 </div>
@@ -513,11 +482,6 @@ export default function GenAiSection({
                   </div>
 
                   <div className="genai-req-title-wrap">
-                    <div className="genai-req-icon-box icon-github">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                      </svg>
-                    </div>
                     <div>
                       <h3 className="genai-req-name">GitHub Repository</h3>
                       <span className="genai-req-sub">Full Source Code</span>
@@ -536,21 +500,12 @@ export default function GenAiSection({
 
                   <ul className="genai-req-points">
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
                       <span>Repository visibility must be strictly set to <strong>Public</strong></span>
                     </li>
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
                       <span>Include README.md describing the project and features</span>
                     </li>
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
                       <span>Source code must match your live deployed website</span>
                     </li>
                   </ul>
@@ -567,7 +522,6 @@ export default function GenAiSection({
                         className="btn btn-primary btn-sm genai-guide-btn"
                       >
                         <span>Open Guide</span>
-                        <span aria-hidden="true">→</span>
                       </button>
                     )}
                   </div>
@@ -583,15 +537,6 @@ export default function GenAiSection({
                   </div>
 
                   <div className="genai-req-title-wrap">
-                    <div className="genai-req-icon-box icon-pdf">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <circle cx="10" cy="9" r="1.5"></circle>
-                      </svg>
-                    </div>
                     <div>
                       <h3 className="genai-req-name">Screenshot (PDF)</h3>
                       <span className="genai-req-sub">Full-Page Capture</span>
@@ -610,29 +555,20 @@ export default function GenAiSection({
 
                   <ul className="genai-req-points">
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
                       <span>Full page capture from top header down to footer</span>
                     </li>
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      <span>Export & save the full capture as a <strong>.PDF</strong> document</span>
+                      <span>Export &amp; save the full capture as a <strong>.PDF</strong> document</span>
                     </li>
                     <li>
-                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
                       <span>Upload the PDF directly into the Google Form</span>
                     </li>
                   </ul>
 
                   <div className="genai-req-footer">
                     <div className="genai-req-footer-guide-info">
-                      <strong>Screenshot & PDF Guide</strong>
-                      <span>Chrome & Edge capture steps</span>
+                      <strong>Screenshot &amp; PDF Guide</strong>
+                      <span>Chrome &amp; Edge capture steps</span>
                     </div>
                     {onOpenPdfGuide && (
                       <button
@@ -641,7 +577,6 @@ export default function GenAiSection({
                         className="btn btn-primary btn-sm genai-guide-btn"
                       >
                         <span>Open Guide</span>
-                        <span aria-hidden="true">→</span>
                       </button>
                     )}
                   </div>
@@ -665,27 +600,15 @@ export default function GenAiSection({
 
                 <div className="submission-checklist-preview" style={{ marginBlockEnd: '1.75rem' }}>
                   <div className="sub-check-pill">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
                     <span>1. Live Deployment URL (Any Host Allowed)</span>
                   </div>
                   <div className="sub-check-pill">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
                     <span>2. Public GitHub Repo URL</span>
                   </div>
                   <div className="sub-check-pill">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
                     <span>3. Full-Page Screenshot PDF</span>
                   </div>
                   <div className="sub-check-pill">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
                     <span>4. Must-Have Features Built ({completedCount}/{mustHavesList.length})</span>
                   </div>
                 </div>
@@ -699,11 +622,6 @@ export default function GenAiSection({
                     id="btn-genai-google-form"
                   >
                     <span>Open Gen AI Submission Form</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                      <polyline points="15 3 21 3 21 9"></polyline>
-                      <line x1="10" y1="14" x2="21" y2="3"></line>
-                    </svg>
                   </a>
 
                   <button
@@ -713,20 +631,9 @@ export default function GenAiSection({
                     title="Copy Google Form URL to clipboard"
                   >
                     {copiedFormLink ? (
-                      <>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        <span style={{ color: '#10B981', fontWeight: 600 }}>Copied Form Link! ✓</span>
-                      </>
+                      <span style={{ color: '#10B981', fontWeight: 600 }}>Copied Form Link</span>
                     ) : (
-                      <>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                        </svg>
-                        <span>Copy Link</span>
-                      </>
+                      <span>Copy Link</span>
                     )}
                   </button>
 
@@ -764,7 +671,7 @@ export default function GenAiSection({
                 style={{ padding: '4px 8px', fontSize: '0.875rem' }}
                 aria-label="Close modal"
               >
-                ✕
+                Close
               </button>
             </div>
 

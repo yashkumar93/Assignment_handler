@@ -44,9 +44,9 @@ const Skiper8 = ({
   words = DEFAULT_WORDS,
   backgroundColor = "#141516",
   textColor = "#ffffff",
-  firstWordDelay = 900,      // 👈 line 47 (First word duration: 0.9s)
-  wordDuration = 550,        // 👈 line 48 (Middle words duration: 0.75s)
-  lastWordDelay = 900,      // 👈 line 49 (Final word duration: 1.1s)
+  firstWordDelay = 900,      // line 47 (First word duration: 0.9s)
+  wordDuration = 550,        // line 48 (Middle words duration: 0.75s)
+  lastWordDelay = 900,      // line 49 (Final word duration: 1.1s)
 
   onComplete,
   className = "",

@@ -159,7 +159,6 @@ export default function RequirementsSection({ onOpenGithubGuide, onOpenPdfGuide,
                 style={{ flexShrink: 0 }}
               >
                 <span>Open Guide</span>
-                <span aria-hidden="true">→</span>
               </button>
             </div>
           </div>
@@ -231,7 +230,6 @@ export default function RequirementsSection({ onOpenGithubGuide, onOpenPdfGuide,
                 style={{ flexShrink: 0 }}
               >
                 <span>Open Guide</span>
-                <span aria-hidden="true">→</span>
               </button>
             </div>
           </div>

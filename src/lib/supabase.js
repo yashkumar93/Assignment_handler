@@ -192,50 +192,108 @@ export async function clearAllDbLinks() {
 
 /**
  * Subscribe to realtime changes on class_links table
+ * Uses unique channel ID per listener to prevent "cannot add postgres_changes callbacks after subscribe()" error
  */
 export function subscribeToClassLinks(onPayload) {
   if (!supabase) return () => {};
 
-  const channel = supabase
-    .channel('realtime:class_links')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'class_links' },
-      (payload) => {
-        if (typeof onPayload === 'function') {
-          onPayload(payload);
+  try {
+    const channelTopic = `class_links_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const channel = supabase
+      .channel(channelTopic)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'class_links' },
+        (payload) => {
+          if (typeof onPayload === 'function') {
+            try {
+              onPayload(payload);
+            } catch (err) {
+              console.warn('Realtime payload handling error:', err);
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      try {
+        supabase.removeChannel(channel);
+      } catch (err) {
+        // Safe channel cleanup
+      }
+    };
+  } catch (err) {
+    console.warn('Realtime subscription error:', err);
+    return () => {};
+  }
+}
+
+/**
+ * Subscribe to direct realtime broadcast drops for the Online Clipboard
+ */
+export function subscribeToClipboardBroadcast(onMessage) {
+  if (!supabase) return () => {};
+
+  try {
+    const channelTopic = `clipboard_drop_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const channel = supabase
+      .channel(channelTopic)
+      .on('broadcast', { event: 'clipboard_drop' }, (payload) => {
+        if (typeof onMessage === 'function') {
+          try {
+            onMessage(payload.payload);
+          } catch (err) {
+            console.warn('Broadcast message handling error:', err);
+          }
+        }
+      })
+      .subscribe();
+
+    return () => {
+      try {
+        supabase.removeChannel(channel);
+      } catch (err) {
+        // Safe channel cleanup
+      }
+    };
+  } catch (err) {
+    console.warn('Broadcast subscription error:', err);
+    return () => {};
+  }
+}
+
+/**
+ * Broadcast an instant clipboard drop to all active browsers
+ */
+export async function broadcastClipboardDrop(item) {
+  if (!supabase) return;
+  try {
+    const channelTopic = `clipboard_drop_send_${Date.now()}`;
+    const channel = supabase.channel(channelTopic);
+    channel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        try {
+          await channel.send({
+            type: 'broadcast',
+            event: 'clipboard_drop',
+            payload: item,
+          });
+        } finally {
+          supabase.removeChannel(channel);
         }
       }
-    )
-    .subscribe((status) => {
-      if (status === 'SUBSCRIBED') {
-        // Channel connected
-      }
     });
-
-  return () => {
-    supabase.removeChannel(channel);
-  };
+  } catch (err) {
+    console.warn('Broadcast send error:', err);
+  }
 }
 
 /**
  * Fetch remote 4-digit passcode from Supabase if stored
+ * Defaults to local configuration to avoid 404 queries on missing tables
  */
 export async function fetchRemotePasscode() {
-  if (!supabase) return null;
-  try {
-    const { data, error } = await supabase
-      .from('app_config')
-      .select('value')
-      .eq('key', 'admin_passcode')
-      .single();
-
-    if (!error && data && data.value) {
-      return String(data.value).trim();
-    }
-  } catch (err) {
-    // Config table might not exist yet; falls back to local
-  }
   return null;
 }
 
@@ -243,15 +301,5 @@ export async function fetchRemotePasscode() {
  * Update remote 4-digit passcode in Supabase
  */
 export async function updateRemotePasscode(newCode) {
-  if (!supabase) return false;
-  try {
-    const { error } = await supabase
-      .from('app_config')
-      .upsert({ key: 'admin_passcode', value: String(newCode).trim() });
-
-    return !error;
-  } catch (err) {
-    console.warn('Could not update remote passcode in Supabase:', err);
-    return false;
-  }
+  return false;
 }

@@ -10,6 +10,7 @@ import LandingPage from './components/LandingPage';
 import GenAiSection from './components/GenAiSection';
 import Skiper8 from './components/ui/skiper-ui/skiper8';
 import StudentNameModal from './components/StudentNameModal';
+import OnlineClipboardModal from './components/OnlineClipboardModal';
 
 // Code-split heavy reference guides (downloaded on-demand only when student navigates to them)
 const GitHubGuide = lazy(() => import('./components/GitHubGuide'));
@@ -36,13 +37,7 @@ export default function App() {
     return false;
   });
 
-  const [showPreloader, setShowPreloader] = useState(() => {
-    if (typeof window !== 'undefined') {
-      // Returning user with name already in cache sees preloader immediately
-      return Boolean(localStorage.getItem('niat_student_name'));
-    }
-    return false;
-  });
+  const [showPreloader, setShowPreloader] = useState(false);
 
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('niat_react_theme');
@@ -73,7 +68,7 @@ export default function App() {
         setCurrentView('genai');
       } else if (window.location.hash.includes('html-css')) {
         setCurrentView('assignment');
-      } else if (!window.location.hash) {
+      } else {
         setCurrentView('landing');
       }
     };
@@ -128,6 +123,7 @@ export default function App() {
   };
 
   const [guideReturnTrack, setGuideReturnTrack] = useState('assignment');
+  const [showClipboardModal, setShowClipboardModal] = useState(false);
 
   const handleOpenGithubGuide = (origin = 'assignment') => {
     setGuideReturnTrack(origin);
@@ -157,6 +153,7 @@ export default function App() {
   const handleBackToLanding = () => {
     setCurrentView('landing');
     if (window.location.hash) {
+      window.location.hash = '';
       history.replaceState(null, '', window.location.pathname);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -165,15 +162,15 @@ export default function App() {
   // Personalized words for the Skiper8 loading animation
   const preloaderWords = studentName
     ? ['Hello', 'नमस्ते', 'Hola!', 'Bonjour', 'Ciao', 'Konnichiwa', 'Hallo', 'Olá', 'Welcome', studentName, 'Assignment Portal']
-
     : ['Hello', 'Welcome', 'Assignment Portal'];
 
   return (
     <div className="app-container">
-      {/* First-time entry Name Onboarding Modal (No skip, required input) */}
+      {/* First-time entry Name Onboarding Modal */}
       <StudentNameModal
         isOpen={showNameModal}
         onSubmit={handleSaveStudentName}
+        onClose={() => setShowNameModal(false)}
       />
 
       {/* Loading Animation with Personalized Student Name */}
@@ -187,10 +184,12 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {showNameModal || showPreloader ? null : currentView === 'landing' ? (
+      {currentView === 'landing' ? (
         <LandingPage
           onSelectTrack={handleSelectTrack}
           studentName={studentName}
+          onOpenNameModal={() => setShowNameModal(true)}
+          onOpenClipboard={() => setShowClipboardModal(true)}
         />
       ) : currentView === 'github-guide' ? (
         <>
@@ -202,6 +201,7 @@ export default function App() {
             studentName={studentName}
             theme={theme}
             onToggleTheme={toggleTheme}
+            onOpenClipboard={() => setShowClipboardModal(true)}
           />
           <main id="top">
             <Suspense fallback={<GuideLoadingFallback />}>
@@ -227,6 +227,7 @@ export default function App() {
             studentName={studentName}
             theme={theme}
             onToggleTheme={toggleTheme}
+            onOpenClipboard={() => setShowClipboardModal(true)}
           />
           <main id="top">
             <Suspense fallback={<GuideLoadingFallback />}>
@@ -250,6 +251,7 @@ export default function App() {
             theme={theme}
             onToggleTheme={toggleTheme}
             view="genai"
+            onOpenClipboard={() => setShowClipboardModal(true)}
           />
           <main id="top">
             <GenAiSection
@@ -272,6 +274,7 @@ export default function App() {
             studentName={studentName}
             theme={theme}
             onToggleTheme={toggleTheme}
+            onOpenClipboard={() => setShowClipboardModal(true)}
           />
           <main id="top">
             <Hero
@@ -362,6 +365,13 @@ export default function App() {
           />
         </>
       )}
+
+      {/* Global Realtime Online Clipboard Modal */}
+      <OnlineClipboardModal
+        isOpen={showClipboardModal}
+        onClose={() => setShowClipboardModal(false)}
+        studentName={studentName}
+      />
     </div>
   );
 }

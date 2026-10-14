@@ -3,8 +3,8 @@
  * CLASSROOM LINKS & RESOURCES CONFIGURATION
  * ==============================================================================
  * 
- * 💡 TEACHER QUICK GUIDE:
- * You can add links here in code OR use the "⚡ Quick Paste" button on the webpage!
+ * TEACHER QUICK GUIDE:
+ * You can add links here in code OR use the "Quick Paste" button on the webpage!
  * 
  * To add a new link here, simply add an item to the `initialClassLinks` array:
  * 
@@ -23,7 +23,7 @@
  */
 
 export const NIAT_CLASS_LINKS_STORAGE_KEY = 'niat_class_links';
-export const DEFAULT_ADMIN_CODE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_ADMIN_PASSCODE) || '2026';
+export const DEFAULT_ADMIN_CODE = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_ADMIN_PASSCODE) || '';
 export const ADMIN_AUTH_KEY = 'niat_admin_unlocked';
 export const ADMIN_PASSCODE_KEY = 'niat_admin_passcode';
 export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
@@ -51,6 +51,7 @@ export function verifyAdminCode(enteredCode = '', remoteCode = null) {
   if (!enteredCode) return false;
   const stored = typeof window !== 'undefined' ? localStorage.getItem(ADMIN_PASSCODE_KEY) : null;
   const target = remoteCode || stored || DEFAULT_ADMIN_CODE;
+  if (!target) return false;
   return enteredCode.trim() === target.trim();
 }
 
