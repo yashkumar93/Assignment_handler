@@ -10,12 +10,32 @@ const CATEGORY_COLORS = {
   'Creative & Interactive': { bg: 'rgba(168, 85, 247, 0.12)', border: 'rgba(168, 85, 247, 0.3)', text: '#C084FC', icon: '🎨' },
 };
 
+export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
+
 export default function GenAiSection({ studentName, onBackToHome, onUpdateStudentName }) {
   const [showRosterModal, setShowRosterModal] = useState(false);
   const [rosterSearch, setRosterSearch] = useState('');
+  const [copiedFormLink, setCopiedFormLink] = useState(false);
   
   // Find project based on studentName
   const project = getGenAiProjectForStudent(studentName);
+
+  const handleCopyFormLink = async () => {
+    try {
+      await navigator.clipboard.writeText(GENAI_SUBMISSION_FORM_URL);
+      setCopiedFormLink(true);
+      setTimeout(() => setCopiedFormLink(false), 2500);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = GENAI_SUBMISSION_FORM_URL;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      setCopiedFormLink(true);
+      setTimeout(() => setCopiedFormLink(false), 2500);
+    }
+  };
 
   // Completed checklist items state persisted in localStorage
   const storageKey = project ? `niat_genai_checklist_${project.sno}` : null;
@@ -104,6 +124,22 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
               <span>Generative AI Track</span>
             </div>
 
+            <a
+              href="#genai-submission"
+              className="genai-quick-submit-pill"
+              onClick={(e) => {
+                const el = document.getElementById('genai-submission');
+                if (el) {
+                  e.preventDefault();
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }}
+              title="Jump to submission form"
+            >
+              <span>Submit Form</span>
+              <span aria-hidden="true">↓</span>
+            </a>
+
             <button
               type="button"
               className="genai-student-selector-btn"
@@ -131,6 +167,27 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
             <p className="genai-not-found-desc">
               We couldn't match your name with the 48 registered students in the Generative AI project roster. Please select your official name below to load your personalized assignment.
             </p>
+
+            <div className="genai-quick-submit-fallback" style={{ marginBlock: '1.25rem', padding: '1rem 1.25rem', background: 'var(--color-bg-surface-alt)', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', width: '100%' }}>
+              <div style={{ textAlign: 'left' }}>
+                <strong style={{ display: 'block', fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>Looking for the submission form?</strong>
+                <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-secondary)' }}>You can submit your Gen AI assessment responses directly.</span>
+              </div>
+              <a
+                href={GENAI_SUBMISSION_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+                style={{ fontSize: '0.875rem', padding: '8px 16px', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+              >
+                <span>Open Submission Form</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
 
             <div className="genai-quick-select-box">
               <div className="genai-search-input-wrap">
@@ -343,31 +400,87 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
               </div>
             </div>
 
-            {/* Submission Section Placeholder (as requested) */}
-            <div className="genai-card genai-submission-placeholder-card">
-              <div className="genai-submission-badge">
-                <span>Final Phase · Project Submission</span>
-              </div>
-              <h2 className="genai-submission-title">
-                Ready to submit your GenAI assignment?
-              </h2>
-              <p className="genai-submission-desc">
-                The official Google Form submission link for Generative AI projects will be released shortly by your instructor. Please ensure your project repository is ready and all must-have features are implemented before final submission.
-              </p>
-
-              <div className="genai-submission-action-bar">
-                <div className="genai-disabled-submission-btn">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                  <span>Google Form Submission Opening Soon</span>
+            {/* Active Official Google Form Submission Section */}
+            <section id="genai-submission" style={{ scrollMarginTop: '6rem' }}>
+              <div className="genai-card genai-submission-active-card">
+                <div className="genai-submission-badge active">
+                  <span className="live-pulse-dot" aria-hidden="true" style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+                  <span>Final Phase · Submissions Open</span>
                 </div>
-                <span className="genai-submission-hint">
-                  Your instructor will activate the submission form URL here.
-                </span>
+                <h2 className="genai-submission-title">
+                  Ready to submit your Gen AI Project?
+                </h2>
+                <p className="genai-submission-desc">
+                  Submit your responses, live deployment URL, and public GitHub repository link for your allocated Generative AI project using the official Google Form.
+                </p>
+
+                <div className="submission-checklist-preview" style={{ marginBlockEnd: '1.75rem' }}>
+                  <div className="sub-check-pill">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>1. Must-Have Features Built ({completedCount}/{mustHavesList.length})</span>
+                  </div>
+                  <div className="sub-check-pill">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>2. Public GitHub Repo URL</span>
+                  </div>
+                  <div className="sub-check-pill">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>3. Live App Demo URL</span>
+                  </div>
+                </div>
+
+                <div className="genai-submission-action-bar">
+                  <a
+                    href={GENAI_SUBMISSION_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary genai-submit-link-btn"
+                    id="btn-genai-google-form"
+                  >
+                    <span>Open Gen AI Submission Form</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyFormLink}
+                    className="btn-icon genai-copy-form-btn"
+                    title="Copy Google Form URL to clipboard"
+                  >
+                    {copiedFormLink ? (
+                      <>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span style={{ color: '#10B981', fontWeight: 600 }}>Copied Form Link! ✓</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                        </svg>
+                        <span>Copy Link</span>
+                      </>
+                    )}
+                  </button>
+
+                  <span className="genai-submission-hint">
+                    Opens Google Form in a new tab to record your responses.
+                  </span>
+                </div>
               </div>
-            </div>
+            </section>
           </div>
         )}
       </div>
