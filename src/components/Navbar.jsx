@@ -60,7 +60,7 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, student
             className="navbar-theme-toggle"
           />
 
-          {onBackToAssignment ? (
+          {onBackToAssignment && (
             <button
               className="btn-icon"
               onClick={onBackToAssignment}
@@ -73,20 +73,6 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, student
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
               <span>Assignment</span>
-            </button>
-          ) : onBackToHome && (
-            <button
-              className="btn-icon"
-              onClick={onBackToHome}
-              type="button"
-              aria-label="Back to Tracks Landing Page"
-              style={{ borderColor: 'var(--color-accent-border)', color: 'var(--color-accent-text)' }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
-              <span>Tracks</span>
             </button>
           )}
         </div>

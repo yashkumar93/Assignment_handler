@@ -28,9 +28,20 @@ export const ADMIN_AUTH_KEY = 'niat_admin_unlocked';
 export const ADMIN_PASSCODE_KEY = 'niat_admin_passcode';
 
 /**
- * Default links list: Start empty so the instructor adds new links directly on the site.
+ * Default links list: Pre-seeded with official assessment submission forms.
  */
-export const initialClassLinks = [];
+export const initialClassLinks = [
+  {
+    id: 'link-genai-assessment-form',
+    title: 'Gen AI Assessment Submission Form',
+    url: 'https://forms.gle/4u63uAuy5ygU3q9b9',
+    description: 'Official response submission form for Generative AI projects and assessment',
+    tag: 'Submission',
+    category: 'google',
+    pinned: true,
+    addedAt: 'Official Form',
+  },
+];
 
 /**
  * Validates the entered 4-digit admin code against remote, stored, or default passcode

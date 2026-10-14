@@ -12,13 +12,24 @@ const CATEGORY_COLORS = {
 
 export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
 
-export default function GenAiSection({ studentName, onBackToHome, onUpdateStudentName }) {
+export default function GenAiSection({
+  studentName,
+  onBackToHome,
+  onUpdateStudentName,
+  onOpenGithubGuide,
+  onOpenPdfGuide,
+}) {
   const [showRosterModal, setShowRosterModal] = useState(false);
   const [rosterSearch, setRosterSearch] = useState('');
   const [copiedFormLink, setCopiedFormLink] = useState(false);
-  
+
   // Find project based on studentName
   const project = getGenAiProjectForStudent(studentName);
+
+  const studentSlug = (studentName || 'student')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 
   const handleCopyFormLink = async () => {
     try {
@@ -66,7 +77,7 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
     if (storageKey) {
       try {
         localStorage.setItem(storageKey, JSON.stringify(updated));
-      } catch {}
+      } catch { }
     }
   };
 
@@ -123,6 +134,22 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
               <span className="genai-pill-dot" />
               <span>Generative AI Track</span>
             </div>
+
+            <a
+              href="#genai-requirements"
+              className="genai-quick-req-pill"
+              onClick={(e) => {
+                const el = document.getElementById('genai-requirements');
+                if (el) {
+                  e.preventDefault();
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+              title="Jump to requirements guide"
+            >
+              <span>Requirements</span>
+              <span aria-hidden="true">↓</span>
+            </a>
 
             <a
               href="#genai-submission"
@@ -400,6 +427,228 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
               </div>
             </div>
 
+            {/* Mandatory Submission Requirements Guide */}
+            <section id="genai-requirements" className="genai-reqs-section">
+              <div className="genai-reqs-header">
+                <div className="pill" style={{ marginBottom: '0.75rem', width: 'fit-content' }}>
+                  <span>📋 Mandatory Project Deliverables Guide</span>
+                </div>
+                <h2 className="genai-reqs-title">
+                  Submission Requirements Guide
+                </h2>
+                <p className="genai-reqs-subtitle">
+                  Every student must complete all three requirements before submitting their Generative AI project. Ensure your project is deployed live, public on GitHub, and documented with a full-page PDF screenshot.
+                </p>
+              </div>
+
+              <div className="genai-reqs-grid">
+                {/* 1. Live Deployment Requirement - NO LIMITATIONS */}
+                <div className="genai-req-card step-deployment" id="genai-req-deployment">
+                  <div className="genai-req-top">
+                    <span className="genai-step-pill">STEP 01</span>
+                    <span className="genai-status-badge badge-deployment">
+                      ✓ Deploy Anywhere
+                    </span>
+                  </div>
+
+                  <div className="genai-req-title-wrap">
+                    <div className="genai-req-icon-box icon-deployment">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="genai-req-name">Live Deployment</h3>
+                      <span className="genai-req-sub">Zero Platform Limitations</span>
+                    </div>
+                  </div>
+
+                  <p className="genai-req-description">
+                    You can deploy your project <strong>anywhere with zero restrictions</strong>. Vercel, Netlify, Render, Railway, GitHub Pages, Firebase, Supabase, or AWS are all 100% permitted. Just paste a live working link through which the evaluator can browse your website.
+                  </p>
+
+                  <div className="genai-req-box">
+                    <span className="genai-req-box-label">REQUIRED DELIVERABLE</span>
+                    <span className="genai-req-box-item">Live Interactive Website URL</span>
+                    <code className="genai-req-code">https://{studentSlug || 'your-project'}.vercel.app</code>
+                  </div>
+
+                  <ul className="genai-req-points">
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Deploy anywhere: Vercel, Netlify, Render, Pages, etc.</span>
+                    </li>
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Must be live & browseable (no localhost or private links)</span>
+                    </li>
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Ensure all must-have features can be clicked and tested</span>
+                    </li>
+                  </ul>
+
+                  <div className="genai-req-footer">
+                    <span className="genai-req-footer-tip">
+                      💡 <strong>Rule:</strong> No platform lock-in. Any working public host is valid.
+                    </span>
+                  </div>
+                </div>
+
+                {/* 2. GitHub Requirement */}
+                <div className="genai-req-card step-github" id="genai-req-github">
+                  <div className="genai-req-top">
+                    <span className="genai-step-pill">STEP 02</span>
+                    <span className="genai-status-badge badge-github">
+                      Must be Public
+                    </span>
+                  </div>
+
+                  <div className="genai-req-title-wrap">
+                    <div className="genai-req-icon-box icon-github">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="genai-req-name">GitHub Repository</h3>
+                      <span className="genai-req-sub">Full Source Code</span>
+                    </div>
+                  </div>
+
+                  <p className="genai-req-description">
+                    Every student must push their complete, unminified source code to a <strong>public GitHub repository</strong>. Evaluators will inspect your repository structure, commits, and code authenticity.
+                  </p>
+
+                  <div className="genai-req-box">
+                    <span className="genai-req-box-label">REQUIRED DELIVERABLE</span>
+                    <span className="genai-req-box-item">Public GitHub Repository URL</span>
+                    <code className="genai-req-code">https://github.com/your-username/{project ? project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'genai-project'}</code>
+                  </div>
+
+                  <ul className="genai-req-points">
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Repository visibility must be strictly set to <strong>Public</strong></span>
+                    </li>
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Include README.md describing the project and features</span>
+                    </li>
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Source code must match your live deployed website</span>
+                    </li>
+                  </ul>
+
+                  <div className="genai-req-footer">
+                    <div className="genai-req-footer-guide-info">
+                      <strong>GitHub Walkthrough</strong>
+                      <span>Step-by-step setup guide</span>
+                    </div>
+                    {onOpenGithubGuide && (
+                      <button
+                        type="button"
+                        onClick={onOpenGithubGuide}
+                        className="btn btn-primary btn-sm genai-guide-btn"
+                      >
+                        <span>Open Guide</span>
+                        <span aria-hidden="true">→</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 3. Full-Page Screenshot PDF Requirement */}
+                <div className="genai-req-card step-pdf" id="genai-req-pdf">
+                  <div className="genai-req-top">
+                    <span className="genai-step-pill">STEP 03</span>
+                    <span className="genai-status-badge badge-pdf">
+                      Upload in Form
+                    </span>
+                  </div>
+
+                  <div className="genai-req-title-wrap">
+                    <div className="genai-req-icon-box icon-pdf">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <circle cx="10" cy="9" r="1.5"></circle>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="genai-req-name">Screenshot (PDF)</h3>
+                      <span className="genai-req-sub">Full-Page Capture</span>
+                    </div>
+                  </div>
+
+                  <p className="genai-req-description">
+                    Every student must capture a <strong>complete full-page screenshot</strong> of their running deployed application (header to footer) and export it as a <strong>PDF file</strong> to upload in the form.
+                  </p>
+
+                  <div className="genai-req-box">
+                    <span className="genai-req-box-label">REQUIRED DELIVERABLE</span>
+                    <span className="genai-req-box-item">Full-Page Application PDF</span>
+                    <code className="genai-req-code">{studentSlug || 'student'}_genai_project.pdf</code>
+                  </div>
+
+                  <ul className="genai-req-points">
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Full page capture from top header down to footer</span>
+                    </li>
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Export & save the full capture as a <strong>.PDF</strong> document</span>
+                    </li>
+                    <li>
+                      <svg className="check-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Upload the PDF directly into the Google Form</span>
+                    </li>
+                  </ul>
+
+                  <div className="genai-req-footer">
+                    <div className="genai-req-footer-guide-info">
+                      <strong>Screenshot & PDF Guide</strong>
+                      <span>Chrome & Edge capture steps</span>
+                    </div>
+                    {onOpenPdfGuide && (
+                      <button
+                        type="button"
+                        onClick={onOpenPdfGuide}
+                        className="btn btn-primary btn-sm genai-guide-btn"
+                      >
+                        <span>Open Guide</span>
+                        <span aria-hidden="true">→</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Active Official Google Form Submission Section */}
             <section id="genai-submission" style={{ scrollMarginTop: '6rem' }}>
               <div className="genai-card genai-submission-active-card">
@@ -411,7 +660,7 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
                   Ready to submit your Gen AI Project?
                 </h2>
                 <p className="genai-submission-desc">
-                  Submit your responses, live deployment URL, and public GitHub repository link for your allocated Generative AI project using the official Google Form.
+                  Submit your responses, live deployment URL (any host), public GitHub repo, and full-page screenshot PDF for your allocated Generative AI project using the official Google Form.
                 </p>
 
                 <div className="submission-checklist-preview" style={{ marginBlockEnd: '1.75rem' }}>
@@ -419,7 +668,7 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span>1. Must-Have Features Built ({completedCount}/{mustHavesList.length})</span>
+                    <span>1. Live Deployment URL (Any Host Allowed)</span>
                   </div>
                   <div className="sub-check-pill">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -431,7 +680,13 @@ export default function GenAiSection({ studentName, onBackToHome, onUpdateStuden
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span>3. Live App Demo URL</span>
+                    <span>3. Full-Page Screenshot PDF</span>
+                  </div>
+                  <div className="sub-check-pill">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>4. Must-Have Features Built ({completedCount}/{mustHavesList.length})</span>
                   </div>
                 </div>
 

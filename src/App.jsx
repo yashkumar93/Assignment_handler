@@ -127,21 +127,30 @@ export default function App() {
     }
   };
 
-  const handleOpenGithubGuide = () => {
+  const [guideReturnTrack, setGuideReturnTrack] = useState('assignment');
+
+  const handleOpenGithubGuide = (origin = 'assignment') => {
+    setGuideReturnTrack(origin);
     setCurrentView('github-guide');
     window.location.hash = 'github-guide';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleOpenPdfGuide = () => {
+  const handleOpenPdfGuide = (origin = 'assignment') => {
+    setGuideReturnTrack(origin);
     setCurrentView('pdf-guide');
     window.location.hash = 'pdf-guide';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackToAssignment = () => {
-    setCurrentView('assignment');
-    window.location.hash = 'html-css';
+    if (guideReturnTrack === 'genai') {
+      setCurrentView('genai');
+      window.location.hash = 'genai';
+    } else {
+      setCurrentView('assignment');
+      window.location.hash = 'html-css';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -243,6 +252,8 @@ export default function App() {
               studentName={studentName}
               onBackToHome={handleBackToLanding}
               onUpdateStudentName={handleUpdateStudentName}
+              onOpenGithubGuide={() => handleOpenGithubGuide('genai')}
+              onOpenPdfGuide={() => handleOpenPdfGuide('genai')}
             />
           </main>
           <Footer
