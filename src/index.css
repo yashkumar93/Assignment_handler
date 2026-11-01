@@ -5741,3 +5741,428 @@ section {
   background-color: var(--color-bg-surface-alt) !important;
   transform: translateX(-2px);
 }
+
+
+/* ============================================================
+   Cover Page Builder (cpb-)
+   ============================================================ */
+.cpb-wrapper {
+  scroll-margin-top: 6rem;
+  margin-block: 3rem;
+}
+
+/* Section header */
+.cpb-section-header {
+  margin-bottom: 2rem;
+}
+
+.cpb-section-title {
+  font-size: clamp(1.375rem, 3vw, 1.875rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.cpb-section-desc {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 68ch;
+  margin-bottom: 1.5rem;
+}
+
+/* Step indicator */
+.cpb-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  gap: 0.25rem 0;
+}
+
+.cpb-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cpb-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 2px solid var(--color-border-default);
+  color: var(--color-text-tertiary);
+  background: var(--color-bg-surface);
+  transition: all 180ms ease;
+  flex-shrink: 0;
+}
+
+.cpb-step-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  transition: color 180ms;
+}
+
+.cpb-step.is-active .cpb-step-label {
+  color: var(--color-text-primary);
+}
+
+.cpb-step-line {
+  width: 40px;
+  height: 2px;
+  background: var(--color-border-default);
+  margin-inline: 0.5rem;
+  border-radius: 99px;
+  flex-shrink: 0;
+  transition: background 300ms ease;
+}
+
+/* Card */
+.cpb-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-card);
+}
+
+/* Form grid */
+.cpb-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.25rem;
+}
+
+.cpb-field-full {
+  grid-column: 1 / -1;
+}
+
+.cpb-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.005em;
+}
+
+.cpb-required {
+  color: #EF4444;
+  margin-left: 2px;
+}
+
+.cpb-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.9375rem;
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background: var(--color-bg-canvas);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.cpb-input:focus {
+  border-color: var(--color-focus-ring);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.cpb-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.cpb-hint {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.cpb-form-actions {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  gap: 1rem;
+}
+
+/* Step 2 layout */
+.cpb-step2-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .cpb-step2-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .cpb-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Preview panel */
+.cpb-preview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.cpb-preview-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.cpb-preview-scale-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1.5px solid var(--color-border-default);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.cpb-preview-scale-wrap:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15);
+}
+
+/* The inner element is 794px wide (native A4) — scaled cleanly via JavaScript */
+.cpb-preview-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 794px;
+  height: 1123px;
+  transform-origin: top left;
+  user-select: none;
+}
+
+.cpb-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 7px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 140ms ease;
+  align-self: flex-start;
+}
+.cpb-edit-btn:hover {
+  background: var(--color-bg-surface-alt);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+}
+
+/* Upload panel */
+.cpb-upload-panel {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: var(--shadow-card);
+}
+
+.cpb-upload-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 0.375rem;
+}
+
+.cpb-upload-desc {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+/* Drop zone */
+.cpb-dropzone {
+  border: 2px dashed var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 160ms ease;
+  background: var(--color-bg-canvas);
+  margin-bottom: 1.25rem;
+}
+
+.cpb-dropzone:hover,
+.cpb-dropzone.is-drag-over {
+  border-color: var(--color-border-strong);
+  background: var(--color-bg-surface-alt);
+}
+
+.cpb-dropzone:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.cpb-dropzone-idle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cpb-dropzone-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-bg-surface-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-tertiary);
+  margin-bottom: 0.25rem;
+}
+
+.cpb-dropzone-text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.cpb-dropzone-sub {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.cpb-file-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.cpb-file-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cpb-file-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  word-break: break-all;
+}
+
+.cpb-file-size {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+
+/* How it works */
+.cpb-how-it-works {
+  padding: 1rem 1.125rem;
+  border-radius: var(--radius);
+  background: var(--color-bg-surface-alt);
+  border: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cpb-hw-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-tertiary);
+  margin-bottom: 0.25rem;
+}
+
+.cpb-hw-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.cpb-hw-num {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+/* Error msg */
+.cpb-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius);
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.75rem;
+}
+
+.cpb-generate-btn {
+  border-radius: var(--radius) !important;
+}
+
+.cpb-privacy-note {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+/* Spinner animation */
+@keyframes cpbSpin {
+  to { transform: rotate(360deg); }
+}
+.cpb-spinner {
+  animation: cpbSpin 0.9s linear infinite;
+}

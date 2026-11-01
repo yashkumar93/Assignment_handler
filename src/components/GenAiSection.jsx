@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GENAI_PROJECTS, getGenAiProjectForStudent, ALL_STUDENT_NAMES } from '../data/genAiProjects';
+import CoverPageBuilder from './CoverPageBuilder';
 
 const CATEGORY_COLORS = {
   'AI-Powered': { bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)', text: '#A78BFA' },
@@ -19,6 +20,7 @@ export default function GenAiSection({
   onUpdateStudentName,
   onOpenGithubGuide,
   onOpenPdfGuide,
+  assessmentNumber = 1,
 }) {
   const [showRosterModal, setShowRosterModal] = useState(false);
   const [rosterSearch, setRosterSearch] = useState('');
@@ -133,7 +135,7 @@ export default function GenAiSection({
 
           <div className="genai-header-pills">
             <span className="pill" style={{ fontSize: '0.75rem', padding: '3px 10px', background: 'rgba(139, 92, 246, 0.12)', color: '#8B5CF6', borderColor: 'rgba(139, 92, 246, 0.3)', fontWeight: 600 }}>
-              Assessment 01 of 04
+              Assessment {String(assessmentNumber).padStart(2, '0')} of 04
             </span>
 
             <div className="genai-track-pill">
@@ -588,6 +590,11 @@ export default function GenAiSection({
                   </div>
                 </div>
               </div>
+            </section>
+
+            {/* Cover Page Builder */}
+            <section style={{ scrollMarginTop: '6rem', marginBlock: '0' }} id="genai-cover-page-builder">
+              <CoverPageBuilder studentName={studentName} track="genai" assessmentNumber={assessmentNumber} />
             </section>
 
             {/* Active Official Google Form Submission Section */}

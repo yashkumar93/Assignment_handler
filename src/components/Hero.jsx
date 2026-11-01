@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Hero({ onBackToHome, onBackToAssessments, studentName }) {
+export default function Hero({ onBackToHome, onBackToAssessments, studentName, assessmentNumber = 1 }) {
   const technologies = ['HTML5', 'CSS3', 'JavaScript'];
 
   return (
@@ -40,7 +40,7 @@ export default function Hero({ onBackToHome, onBackToAssessments, studentName })
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
             <span className="pill" style={{ fontSize: '0.75rem', padding: '3px 10px', background: 'rgba(37, 99, 235, 0.1)', color: '#2563EB', borderColor: 'rgba(37, 99, 235, 0.25)', fontWeight: 600 }}>
-              Assessment 01 of 04
+              Assessment {String(assessmentNumber).padStart(2, '0')} of 04
             </span>
           </div>
         </div>

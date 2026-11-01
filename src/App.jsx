@@ -12,6 +12,7 @@ import Skiper8 from './components/ui/skiper-ui/skiper8';
 import StudentNameModal from './components/StudentNameModal';
 import OnlineClipboardModal from './components/OnlineClipboardModal';
 import TrackAssessmentPage from './components/TrackAssessmentPage';
+import CoverPageBuilder from './components/CoverPageBuilder';
 
 // Code-split heavy reference guides (downloaded on-demand only when student navigates to them)
 const GitHubGuide = lazy(() => import('./components/GitHubGuide'));
@@ -50,6 +51,8 @@ export default function App() {
   });
 
   // selectedTrack: 'html-css' | 'genai' — remembered when on track-select view
+  const [selectedAssessment, setSelectedAssessment] = useState(1);
+
   const [selectedTrack, setSelectedTrack] = useState(() => {
     if (typeof window !== 'undefined') {
       if (window.location.hash.includes('genai')) return 'genai';
@@ -146,6 +149,7 @@ export default function App() {
   // Called from TrackAssessmentPage when a specific assessment card is clicked
   const handleSelectAssessment = (track, assessmentNumber) => {
     if (assessmentNumber !== 1) return; // Only assessment 1 is active
+    setSelectedAssessment(assessmentNumber);
     if (track === 'html-css') {
       setCurrentView('assignment');
       window.location.hash = 'html-css';
@@ -323,6 +327,7 @@ export default function App() {
               onUpdateStudentName={handleUpdateStudentName}
               onOpenGithubGuide={() => handleOpenGithubGuide('genai')}
               onOpenPdfGuide={() => handleOpenPdfGuide('genai')}
+              assessmentNumber={selectedAssessment}
             />
           </main>
           <Footer
@@ -346,6 +351,7 @@ export default function App() {
               onBackToHome={handleBackToLanding}
               onBackToAssessments={handleBackToTrackSelect}
               studentName={studentName}
+              assessmentNumber={selectedAssessment}
             />
             <StructureSection
               studentName={studentName}
@@ -356,6 +362,13 @@ export default function App() {
               studentName={studentName}
             />
             <RubricSection />
+
+            {/* Cover Page Builder */}
+            <section style={{ scrollMarginTop: '6rem' }} id="cover-page-builder-section">
+              <div className="wrap">
+                <CoverPageBuilder studentName={studentName} track="html-css" assessmentNumber={selectedAssessment} />
+              </div>
+            </section>
 
             {/* Official Google Form Submission Action */}
             <section id="submission-form" style={{ scrollMarginTop: '6rem' }}>
