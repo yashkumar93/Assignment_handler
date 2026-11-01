@@ -15,6 +15,7 @@ export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
 export default function GenAiSection({
   studentName,
   onBackToHome,
+  onBackToAssessments,
   onUpdateStudentName,
   onOpenGithubGuide,
   onOpenPdfGuide,
@@ -118,18 +119,23 @@ export default function GenAiSection({
         <div className="genai-header-bar">
           <button
             type="button"
-            onClick={onBackToHome}
+            onClick={onBackToAssessments || onBackToHome}
             className="btn-icon genai-back-btn"
-            aria-label="Back to Tracks"
+            aria-label="Back to Assessments"
+            title="Choose another assessment"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            <span>Back to Tracks</span>
+            <span>Back to Assessments</span>
           </button>
 
           <div className="genai-header-pills">
+            <span className="pill" style={{ fontSize: '0.75rem', padding: '3px 10px', background: 'rgba(139, 92, 246, 0.12)', color: '#8B5CF6', borderColor: 'rgba(139, 92, 246, 0.3)', fontWeight: 600 }}>
+              Assessment 01 of 04
+            </span>
+
             <div className="genai-track-pill">
               <span className="genai-pill-dot" />
               <span>Generative AI Track</span>
@@ -639,6 +645,36 @@ export default function GenAiSection({
 
                   <span className="genai-submission-hint">
                     Opens Google Form in a new tab to record your responses.
+                  </span>
+                </div>
+
+                <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--color-border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                  <button
+                    type="button"
+                    onClick={onBackToAssessments || onBackToHome}
+                    className="btn-icon"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.45rem',
+                      padding: '8px 16px',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      color: 'var(--color-text-secondary)',
+                      borderRadius: '8px',
+                      border: '1px solid var(--color-border-default)',
+                      background: 'var(--color-bg-surface)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="19" y1="12" x2="5" y2="12"></line>
+                      <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span>Choose Another Assessment</span>
+                  </button>
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-tertiary)' }}>
+                    Want to switch tasks? Return to the assessment dashboard.
                   </span>
                 </div>
               </div>

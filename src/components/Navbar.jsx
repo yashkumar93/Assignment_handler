@@ -3,7 +3,7 @@ import BrandLogo from './BrandLogo';
 import { ProgressiveBlur } from './ui/skiper-ui/skiper41';
 import { ThemeToggleButton } from './ui/skiper-ui/skiper26';
 
-export default function Navbar({ onBackToHome, onBackToAssignment, view, track, studentName, theme, onToggleTheme, onOpenClipboard }) {
+export default function Navbar({ onBackToHome, onBackToAssessments, onBackToAssignment, view, track, studentName, theme, onToggleTheme, onOpenClipboard }) {
   return (
     <nav className="nav" role="navigation" aria-label="Main navigation">
       {/* Progressive Blur Transition Bar */}
@@ -23,6 +23,9 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, track, 
             if (onBackToAssignment) {
               e.preventDefault();
               onBackToAssignment();
+            } else if (onBackToAssessments) {
+              e.preventDefault();
+              onBackToAssessments();
             } else if (onBackToHome) {
               e.preventDefault();
               onBackToHome();
@@ -36,12 +39,12 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, track, 
           </span>
           <span className="pill" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
             {view === 'genai'
-              ? 'Project Track'
+              ? 'Assessment 1 · Gen AI'
               : view === 'github-guide'
               ? (track === 'genai' ? 'Gen AI Guide' : 'Portfolio 101')
               : view === 'pdf-guide'
               ? (track === 'genai' ? 'Gen AI PDF Guide' : 'PDF Guide')
-              : 'Portfolio Track'}
+              : 'Assessment 1 · HTML & CSS'}
           </span>
         </a>
 
@@ -80,6 +83,37 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, track, 
             className="navbar-theme-toggle"
           />
 
+          {/* Choose another assessment button */}
+          {onBackToAssessments && (
+            <button
+              className="btn-icon nav-assessments-btn"
+              onClick={onBackToAssessments}
+              type="button"
+              aria-label="Choose another assessment"
+              title="Choose another assessment"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '6px 12px',
+                fontSize: '0.8125rem',
+                fontWeight: 600,
+                color: 'var(--color-text-secondary)',
+                borderRadius: '8px',
+                border: '1px solid var(--color-border-subtle)',
+                background: 'var(--color-bg-surface)',
+                cursor: 'pointer'
+              }}
+              id="navbar-btn-assessments"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Assessments</span>
+            </button>
+          )}
+
           {/* Direct Return to Landing Page button */}
           {onBackToHome && (
             <button
@@ -107,7 +141,7 @@ export default function Navbar({ onBackToHome, onBackToAssignment, view, track, 
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
               </svg>
-              <span>Home</span>
+              <span>Tracks</span>
             </button>
           )}
 

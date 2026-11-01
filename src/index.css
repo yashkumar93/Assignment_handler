@@ -5722,3 +5722,22 @@ section {
   height: 2rem;
   flex-shrink: 0;
 }
+
+/* Navigation Assessments Back Buttons */
+.nav-assessments-btn {
+  transition: all 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-assessments-btn:hover {
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-strong) !important;
+  background-color: var(--color-bg-surface-alt) !important;
+  transform: translateX(-1px);
+}
+
+.hero-back-btn:hover,
+.assessment-back-btn:hover {
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-strong) !important;
+  background-color: var(--color-bg-surface-alt) !important;
+  transform: translateX(-2px);
+}

@@ -50,7 +50,12 @@ export default function App() {
   });
 
   // selectedTrack: 'html-css' | 'genai' — remembered when on track-select view
-  const [selectedTrack, setSelectedTrack] = useState('html-css');
+  const [selectedTrack, setSelectedTrack] = useState(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.hash.includes('genai')) return 'genai';
+    }
+    return 'html-css';
+  });
 
   const [currentView, setCurrentView] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -71,12 +76,16 @@ export default function App() {
       } else if (window.location.hash.includes('pdf-guide')) {
         setCurrentView('pdf-guide');
       } else if (window.location.hash.includes('genai-assessment-select')) {
+        setSelectedTrack('genai');
         setCurrentView('genai-track-select');
       } else if (window.location.hash.includes('html-css-assessment-select')) {
+        setSelectedTrack('html-css');
         setCurrentView('html-css-track-select');
       } else if (window.location.hash.includes('genai')) {
+        setSelectedTrack('genai');
         setCurrentView('genai');
       } else if (window.location.hash.includes('html-css')) {
+        setSelectedTrack('html-css');
         setCurrentView('assignment');
       } else {
         setCurrentView('landing');
@@ -299,6 +308,7 @@ export default function App() {
         <>
           <Navbar
             onBackToHome={handleBackToLanding}
+            onBackToAssessments={handleBackToTrackSelect}
             studentName={studentName}
             theme={theme}
             onToggleTheme={toggleTheme}
@@ -308,7 +318,8 @@ export default function App() {
           <main id="top">
             <GenAiSection
               studentName={studentName}
-              onBackToHome={handleBackToTrackSelect}
+              onBackToHome={handleBackToLanding}
+              onBackToAssessments={handleBackToTrackSelect}
               onUpdateStudentName={handleUpdateStudentName}
               onOpenGithubGuide={() => handleOpenGithubGuide('genai')}
               onOpenPdfGuide={() => handleOpenPdfGuide('genai')}
@@ -323,14 +334,17 @@ export default function App() {
         <>
           <Navbar
             onBackToHome={handleBackToLanding}
+            onBackToAssessments={handleBackToTrackSelect}
             studentName={studentName}
             theme={theme}
             onToggleTheme={toggleTheme}
+            view="assignment"
             onOpenClipboard={() => setShowClipboardModal(true)}
           />
           <main id="top">
             <Hero
               onBackToHome={handleBackToLanding}
+              onBackToAssessments={handleBackToTrackSelect}
               studentName={studentName}
             />
             <StructureSection
@@ -405,6 +419,36 @@ export default function App() {
                     </a>
                     <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-tertiary)' }}>
                       Opens Google Form in a new tab
+                    </span>
+                  </div>
+
+                  <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--color-border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                    <button
+                      type="button"
+                      onClick={handleBackToTrackSelect}
+                      className="btn-icon"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                        padding: '8px 16px',
+                        fontSize: '0.875rem',
+                        fontWeight: 600,
+                        color: 'var(--color-text-secondary)',
+                        borderRadius: '8px',
+                        border: '1px solid var(--color-border-default)',
+                        background: 'var(--color-bg-surface)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                      </svg>
+                      <span>Choose Another Assessment</span>
+                    </button>
+                    <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-tertiary)' }}>
+                      Want to switch tasks? Return to the assessment dashboard.
                     </span>
                   </div>
                 </div>
