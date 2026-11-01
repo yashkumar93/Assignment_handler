@@ -11,6 +11,7 @@ import GenAiSection from './components/GenAiSection';
 import Skiper8 from './components/ui/skiper-ui/skiper8';
 import StudentNameModal from './components/StudentNameModal';
 import OnlineClipboardModal from './components/OnlineClipboardModal';
+import TrackAssessmentPage from './components/TrackAssessmentPage';
 
 // Code-split heavy reference guides (downloaded on-demand only when student navigates to them)
 const GitHubGuide = lazy(() => import('./components/GitHubGuide'));
@@ -48,10 +49,15 @@ export default function App() {
     return 'light';
   });
 
+  // selectedTrack: 'html-css' | 'genai' — remembered when on track-select view
+  const [selectedTrack, setSelectedTrack] = useState('html-css');
+
   const [currentView, setCurrentView] = useState(() => {
     if (typeof window !== 'undefined') {
       if (window.location.hash.includes('github-guide')) return 'github-guide';
       if (window.location.hash.includes('pdf-guide')) return 'pdf-guide';
+      if (window.location.hash.includes('genai-assessment-select')) return 'genai-track-select';
+      if (window.location.hash.includes('html-css-assessment-select')) return 'html-css-track-select';
       if (window.location.hash.includes('genai')) return 'genai';
       if (window.location.hash.includes('html-css')) return 'assignment';
     }
@@ -64,6 +70,10 @@ export default function App() {
         setCurrentView('github-guide');
       } else if (window.location.hash.includes('pdf-guide')) {
         setCurrentView('pdf-guide');
+      } else if (window.location.hash.includes('genai-assessment-select')) {
+        setCurrentView('genai-track-select');
+      } else if (window.location.hash.includes('html-css-assessment-select')) {
+        setCurrentView('html-css-track-select');
       } else if (window.location.hash.includes('genai')) {
         setCurrentView('genai');
       } else if (window.location.hash.includes('html-css')) {
@@ -112,6 +122,22 @@ export default function App() {
 
   const handleSelectTrack = (track) => {
     if (track === 'assignment' || track === 'html-css') {
+      setSelectedTrack('html-css');
+      setCurrentView('html-css-track-select');
+      window.location.hash = 'html-css-assessment-select';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (track === 'genai') {
+      setSelectedTrack('genai');
+      setCurrentView('genai-track-select');
+      window.location.hash = 'genai-assessment-select';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Called from TrackAssessmentPage when a specific assessment card is clicked
+  const handleSelectAssessment = (track, assessmentNumber) => {
+    if (assessmentNumber !== 1) return; // Only assessment 1 is active
+    if (track === 'html-css') {
       setCurrentView('assignment');
       window.location.hash = 'html-css';
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -120,6 +146,18 @@ export default function App() {
       window.location.hash = 'genai';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
+
+  // Back from assessment page → track selection page
+  const handleBackToTrackSelect = () => {
+    if (selectedTrack === 'genai') {
+      setCurrentView('genai-track-select');
+      window.location.hash = 'genai-assessment-select';
+    } else {
+      setCurrentView('html-css-track-select');
+      window.location.hash = 'html-css-assessment-select';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const [guideReturnTrack, setGuideReturnTrack] = useState('assignment');
@@ -191,6 +229,20 @@ export default function App() {
           onOpenNameModal={() => setShowNameModal(true)}
           onOpenClipboard={() => setShowClipboardModal(true)}
         />
+      ) : currentView === 'html-css-track-select' ? (
+        <TrackAssessmentPage
+          track="html-css"
+          studentName={studentName}
+          onSelectAssessment={(num) => handleSelectAssessment('html-css', num)}
+          onBackToLanding={handleBackToLanding}
+        />
+      ) : currentView === 'genai-track-select' ? (
+        <TrackAssessmentPage
+          track="genai"
+          studentName={studentName}
+          onSelectAssessment={(num) => handleSelectAssessment('genai', num)}
+          onBackToLanding={handleBackToLanding}
+        />
       ) : currentView === 'github-guide' ? (
         <>
           <Navbar
@@ -256,7 +308,7 @@ export default function App() {
           <main id="top">
             <GenAiSection
               studentName={studentName}
-              onBackToHome={handleBackToLanding}
+              onBackToHome={handleBackToTrackSelect}
               onUpdateStudentName={handleUpdateStudentName}
               onOpenGithubGuide={() => handleOpenGithubGuide('genai')}
               onOpenPdfGuide={() => handleOpenPdfGuide('genai')}
