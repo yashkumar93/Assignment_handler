@@ -12,6 +12,7 @@
     "@formfacade/embed-react": "^1.1.2",
     "@supabase/supabase-js": "^2.117.3",
     "@tailwindcss/postcss": "^4.3.3",
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "framer-motion": "^14.0.0",
     "gsap": "^3.15.0",
