@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import LandingPage from './components/LandingPage';
 import GenAiSection from './components/GenAiSection';
 import GenAiAssessment2 from './components/GenAiAssessment2';
+import GenAiAssessment3 from './components/GenAiAssessment3';
 import Skiper8 from './components/ui/skiper-ui/skiper8';
 import StudentNameModal from './components/StudentNameModal';
 import OnlineClipboardModal from './components/OnlineClipboardModal';
@@ -67,6 +68,7 @@ export default function App() {
       if (window.location.hash.includes('pdf-guide')) return 'pdf-guide';
       if (window.location.hash.includes('genai-assessment-select')) return 'genai-track-select';
       if (window.location.hash.includes('html-css-assessment-select')) return 'html-css-track-select';
+      if (window.location.hash.includes('genai-assessment-3')) return 'genai-assessment-3';
       if (window.location.hash.includes('genai-assessment-2')) return 'genai-assessment-2';
       if (window.location.hash.includes('genai')) return 'genai';
       if (window.location.hash.includes('html-css')) return 'assignment';
@@ -86,6 +88,10 @@ export default function App() {
       } else if (window.location.hash.includes('html-css-assessment-select')) {
         setSelectedTrack('html-css');
         setCurrentView('html-css-track-select');
+      } else if (window.location.hash.includes('genai-assessment-3')) {
+        setSelectedTrack('genai');
+        setSelectedAssessment(3);
+        setCurrentView('genai-assessment-3');
       } else if (window.location.hash.includes('genai-assessment-2')) {
         setSelectedTrack('genai');
         setCurrentView('genai-assessment-2');
@@ -167,6 +173,10 @@ export default function App() {
       } else if (assessmentNumber === 2) {
         setCurrentView('genai-assessment-2');
         window.location.hash = 'genai-assessment-2';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (assessmentNumber === 3) {
+        setCurrentView('genai-assessment-3');
+        window.location.hash = 'genai-assessment-3';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
@@ -332,6 +342,28 @@ export default function App() {
           />
           <main id="top">
             <GenAiAssessment2
+              studentName={studentName}
+              onBackToAssessments={handleBackToTrackSelect}
+            />
+          </main>
+          <Footer
+            onBackToHome={handleBackToLanding}
+            studentName={studentName}
+          />
+        </>
+      ) : currentView === 'genai-assessment-3' ? (
+        <>
+          <Navbar
+            onBackToHome={handleBackToLanding}
+            onBackToAssessments={handleBackToTrackSelect}
+            studentName={studentName}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            view="genai"
+            onOpenClipboard={() => setShowClipboardModal(true)}
+          />
+          <main id="top">
+            <GenAiAssessment3
               studentName={studentName}
               onBackToAssessments={handleBackToTrackSelect}
             />

@@ -37,13 +37,14 @@ const HTML_CSS_ASSESSMENTS = [
     id: 'assessment-3',
     number: 3,
     label: 'Assessment 3',
-    status: 'coming-soon',
-    statusLabel: 'Coming Soon',
-    description: 'Details for Assessment 3 will be announced soon. Stay tuned!',
+    status: 'active',
+    statusLabel: 'Active',
+    description: 'Complete the AI Capabilities & Limitations course on Claude Academy and submit your completion badge.',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4l3 3"/>
+        <path d="M3.05 11a9 9 0 1 1 .5 4"/>
       </svg>
     ),
   },
@@ -100,13 +101,14 @@ const GENAI_ASSESSMENTS = [
     id: 'assessment-3',
     number: 3,
     label: 'Assessment 3',
-    status: 'coming-soon',
-    statusLabel: 'Coming Soon',
-    description: 'Details for Assessment 3 will be announced soon. Stay tuned!',
+    status: 'active',
+    statusLabel: 'Active',
+    description: 'Complete the AI Capabilities & Limitations course on Claude Academy and submit your completion badge.',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4l3 3"/>
+        <path d="M3.05 11a9 9 0 1 1 .5 4"/>
       </svg>
     ),
   },
