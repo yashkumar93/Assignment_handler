@@ -1,7 +1,7 @@
 import React from 'react';
 import BrandLogo from './BrandLogo';
 
-const ASSESSMENTS = [
+const HTML_CSS_ASSESSMENTS = [
   {
     id: 'assessment-1',
     number: 1,
@@ -63,12 +63,76 @@ const ASSESSMENTS = [
   },
 ];
 
+const GENAI_ASSESSMENTS = [
+  {
+    id: 'assessment-1',
+    number: 1,
+    label: 'Assessment 1',
+    status: 'active',
+    statusLabel: 'Active',
+    description: 'Build a Generative AI project — structured requirements, rubric, and submission form.',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+        <polyline points="10 9 9 9 8 9" />
+      </svg>
+    ),
+  },
+  {
+    id: 'assessment-2',
+    number: 2,
+    label: 'Assessment 2',
+    status: 'active',
+    statusLabel: 'Active',
+    description: 'Complete Anthropic\'s free Claude 101 course and submit your certificate of completion.',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    ),
+  },
+  {
+    id: 'assessment-3',
+    number: 3,
+    label: 'Assessment 3',
+    status: 'coming-soon',
+    statusLabel: 'Coming Soon',
+    description: 'Details for Assessment 3 will be announced soon. Stay tuned!',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+    ),
+  },
+  {
+    id: 'assessment-4',
+    number: 4,
+    label: 'Assessment 4',
+    status: 'coming-soon',
+    statusLabel: 'Coming Soon',
+    description: 'Details for Assessment 4 will be announced soon. Stay tuned!',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+    ),
+  },
+];
+
 export default function TrackAssessmentPage({ track, studentName, onSelectAssessment, onBackToLanding }) {
   const isGenAi = track === 'genai';
   const trackLabel = isGenAi ? 'Generative AI' : 'HTML & CSS';
   const trackColor = isGenAi ? '#8B5CF6' : '#2563EB';
   const trackColorSubtle = isGenAi ? 'rgba(139, 92, 246, 0.12)' : 'rgba(37, 99, 235, 0.10)';
   const trackColorBorder = isGenAi ? 'rgba(139, 92, 246, 0.3)' : 'rgba(37, 99, 235, 0.25)';
+  const ASSESSMENTS = isGenAi ? GENAI_ASSESSMENTS : HTML_CSS_ASSESSMENTS;
 
   return (
     <div className="track-assessment-wrapper">

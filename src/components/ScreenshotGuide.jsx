@@ -199,9 +199,9 @@ export default function ScreenshotGuide({
 
   return (
     <div className="github-guide-page">
-      <div className="wrap" style={{ paddingBlock: '2.5rem 5rem' }}>
+      <div className="wrap" style={{ paddingBlock: '1.25rem 2.5rem' }}>
         {/* Track Switcher Bar */}
-        <div className="guide-track-switcher-wrap" style={{ marginBottom: '2rem' }}>
+        <div className="guide-track-switcher-wrap" style={{ marginBottom: '1.25rem' }}>
           <div className="guide-track-switcher">
             <button
               type="button"

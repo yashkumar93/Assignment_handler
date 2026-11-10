@@ -27,6 +27,7 @@ export const DEFAULT_ADMIN_CODE = (typeof import.meta !== 'undefined' && import.
 export const ADMIN_AUTH_KEY = 'niat_admin_unlocked';
 export const ADMIN_PASSCODE_KEY = 'niat_admin_passcode';
 export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
+export const CLAUDE_101_SUBMISSION_FORM_URL = 'https://forms.gle/56UV3eHNccwb5LHK6';
 
 /**
  * Default links list: Pre-seeded with official assessment submission forms.
@@ -34,9 +35,19 @@ export const GENAI_SUBMISSION_FORM_URL = 'https://forms.gle/4u63uAuy5ygU3q9b9';
 export const initialClassLinks = [
   {
     id: 'link-genai-assessment-form',
-    title: 'Gen AI Assessment Submission Form',
+    title: 'Gen AI Assessment 1 Submission Form',
     url: 'https://forms.gle/4u63uAuy5ygU3q9b9',
-    description: 'Official response submission form for Generative AI projects and assessment',
+    description: 'Official response submission form for Generative AI projects (Assessment 1)',
+    tag: 'Submission',
+    category: 'google',
+    pinned: true,
+    addedAt: 'Official Form',
+  },
+  {
+    id: 'link-claude-101-assessment-form',
+    title: 'Claude 101 (Assessment 2) Submission Form',
+    url: 'https://forms.gle/56UV3eHNccwb5LHK6',
+    description: 'Official Google Form submission for Claude 101 certificate verification and proof',
     tag: 'Submission',
     category: 'google',
     pinned: true,
